@@ -18,6 +18,7 @@ app=$YNH_APP_INSTANCE_NAME
 
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 port=$(ynh_app_setting_get --app=$app --key=port)
+port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
 #=================================================
@@ -81,6 +82,16 @@ ynh_script_progression --message="Removing logrotate configuration..." --time --
 
 # Remove the app-specific logrotate config
 ynh_remove_logrotate
+
+#=================================================
+# CLOSE WIREGUARD PORT
+#=================================================
+
+if yunohost firewall list | grep -q "\- $port_wg$"
+then
+	ynh_script_progression --message="Closing port $port_wg..." --time --weight=1
+	ynh_exec_warn_less yunohost firewall disallow TCP $port_wg
+fi
 
 #=================================================
 # GENERIC FINALIZATION
