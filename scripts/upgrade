@@ -93,7 +93,7 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Upgrading dependencies..." --time --weight=1
 
-ynh_install_extra_app_dependencies --repo="http://http.debian.net/debian buster-backports main" --package="$pkg_dependencies"
+ynh_install_extra_app_dependencies --repo="http://deb.debian.org/debian buster-backports main" --package="$pkg_dependencies"
 
 #=================================================
 # CREATE DEDICATED USER
