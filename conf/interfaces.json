@@ -1,0 +1,8 @@
+{
+        "addresses": [
+                "10.10.10.0/24"
+        ],
+        "listen_port": "__PORT_WG__",
+        "post_up": "",
+        "post_down": ""
+}
