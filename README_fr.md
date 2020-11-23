@@ -5,6 +5,8 @@
 
 *[Read this readme in english.](./README.md)* 
 
+:warning: Cette app est encore expérimentale. WireGuard requiert de mettre à niveau votre noyau Linux. Vérifiez sa compatibilté avant de lancer l'installation sur un serveur de production. :warning:
+
 > *Ce package vous permet d'installer WireGuard rapidement et simplement sur un serveur YunoHost.  
 Si vous n'avez pas YunoHost, consultez [le guide](https://yunohost.org/#/install) pour apprendre comment l'installer.*
 
