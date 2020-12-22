@@ -75,7 +75,11 @@ ynh_exec_warn_less yunohost firewall allow --no-upnp UDP $port_wg
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=7
 
-ynh_install_extra_app_dependencies --repo="http://deb.debian.org/debian buster-backports main" --package="$pkg_dependencies"
+ynh_install_extra_repo --repo="http://deb.debian.org/debian buster-backports main"--priority=-1 --name=$app
+
+ynh_add_app_dependencies --package="$pkg_dependencies"
+
+ynh_remove_extra_repo --name=$app
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
