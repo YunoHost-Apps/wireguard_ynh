@@ -104,7 +104,21 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Upgrading dependencies..." --weight=7
 
-ynh_install_extra_app_dependencies --repo="http://deb.debian.org/debian buster-backports main" --package="$pkg_dependencies"
+#TODO: remove buster-backports kernel
+
+#Add buster-backports repo
+ynh_add_repo --uri="http://deb.debian.org/debian" --suite="buster-backports" --component="main" --name="$app"
+
+#Add pin-priority for wireguard package
+ynh_pin_repo --package="wireguard*" --pin="origin deb http://deb.debian.org/debian buster-backports main" 995 --name="$app"
+
+# Update the list of package with the new repo
+ynh_package_update
+
+ynh_add_app_dependencies --package="$pkg_dependencies"
+
+#Remove buster-backports repo and pin-priority
+ynh_remove_extra_repo --name=$app
 
 #=================================================
 # CREATE DEDICATED USER
