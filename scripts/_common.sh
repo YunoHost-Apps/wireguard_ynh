@@ -5,7 +5,7 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="wireguard"
+pkg_dependencies="wireguard-dkms wireguard"
 
 #=================================================
 # PERSONAL HELPERS
