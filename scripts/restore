@@ -90,7 +90,7 @@ ynh_script_progression --message="Reinstalling dependencies..." --weight=5
 ynh_add_repo --uri="http://deb.debian.org/debian" --suite="buster-backports" --component="main" --name="$app"
 
 #Add pin-priority for wireguard package
-ynh_pin_repo --package="wireguard*" --pin="origin deb http://deb.debian.org/debian buster-backports main" 995 --name="$app"
+ynh_pin_repo --package="wireguard*" --pin="origin deb http://deb.debian.org/debian buster-backports main" --priority=995 --name="$app"
 
 # Update the list of package with the new repo
 ynh_package_update
