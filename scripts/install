@@ -176,6 +176,7 @@ ynh_use_logrotate
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --time --weight=1
 
+yunohost service add wireguard --description "WireGuard" --needs_exposed_ports $port_wg
 yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/ui.log"
 
 ### Additional options starting with 3.8:
