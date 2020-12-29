@@ -118,10 +118,7 @@ cp ../conf/wireguard.path /etc/systemd/system/wireguard.path
 systemctl enable wireguard.path
 
 # Create a dedicated systemd config for restarting WireGuard
-cp ../conf/wireguard.service /etc/systemd/system/wireguard.service
-ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --target_file="/etc/systemd/system/wireguard.service"
-systemctl enable wireguard.service
-#ynh_exec_fully_quiet ynh_add_systemd_config --service=wireguard --template=wireguard.service --others_var="port_wg"
+ynh_add_systemd_config --service=wireguard --template=wireguard.service --others_var="port_wg"
 
 #=================================================
 # CONFIGURING WIREGUARD
