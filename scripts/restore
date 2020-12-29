@@ -91,8 +91,11 @@ ynh_install_extra_app_dependencies --repo="http://http.debian.net/debian buster-
 #=================================================
 ynh_script_progression --message="Restoring the systemd configuration..." --time --weight=1
 
+ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui.service
+ynh_restore_file --origin_path=/etc/systemd/system/wireguard.path
 ynh_restore_file --origin_path="/etc/systemd/system/$app.service"
-systemctl enable $app.service
+
+systemctl enable wireguard.path
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
