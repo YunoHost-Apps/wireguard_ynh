@@ -133,7 +133,7 @@ ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service --
 
 # Create a dedicated systemd config for monitoring WireGuard's configuration
 cp ../conf/wireguard.path /etc/systemd/system/wireguard.path
-systemctl enable wireguard.path
+systemctl enable --quiet wireguard.path
 
 # Create a dedicated systemd config for restarting WireGuard
 ynh_add_systemd_config --service=wireguard --template=wireguard.service --others_var="port_wg"
