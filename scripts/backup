@@ -68,6 +68,8 @@ ynh_backup --src_path="/etc/logrotate.d/$app"
 #=================================================
 
 ynh_backup --src_path="/etc/systemd/system/$app.service"
+ynh_backup --src_path=/etc/systemd/system/wireguard_ui.service
+ynh_backup --src_path=/etc/systemd/system/wireguard.path
 
 #=================================================
 # BACKUP VARIOUS FILES
