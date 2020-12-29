@@ -9,7 +9,7 @@
 		path="/"	(PATH)
 		admin="john"	(USER)
 		#language="fr"
-		#is_public=1	(PUBLIC|public=1|private=0)
+		is_public=1	(PUBLIC|public=1|private=0)
 		#password="pass"
 		#port="666"	(PORT)
 	; Checks
@@ -18,13 +18,11 @@
 		setup_root=1
 		setup_nourl=0
 		setup_private=1
-		setup_public=1
+		setup_public=0
 		upgrade=1
 		#upgrade=1	from_commit=CommitHash
-		backup_restore=1
-		multi_instance=1
-		# This test is no longer necessary since the version 2.7 (PR: https://github.com/YunoHost/yunohost/pull/304), you can still do it if your app could be installed with this version.
-		# incorrect_path=1
+		backup_restore=1 #TODO: Manipulate wg0.conf in backup_restore and remove ?
+		multi_instance=0 #No need of multi-instance this
 		port_already_use=0
 		change_url=0
 ;;; Levels
