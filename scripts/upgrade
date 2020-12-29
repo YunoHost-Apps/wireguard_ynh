@@ -142,7 +142,7 @@ ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --ta
 # Set permissions on app files
 chown -R root: $final_path
 chown -R $app: $final_path/db
-chmod 750 -R $final_path/db
+chmod -R 750 $final_path/db
 
 #=================================================
 # SETUP LOGROTATE

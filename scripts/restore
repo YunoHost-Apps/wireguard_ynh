@@ -73,7 +73,7 @@ ynh_system_user_create --username=$app
 # Restore permissions on app files
 chown -R root: $final_path
 chown -R $app: $final_path/db
-chmod 660 -R $final_path/db
+chmod -R 750 $final_path/db
 
 #=================================================
 # SPECIFIC RESTORATION
