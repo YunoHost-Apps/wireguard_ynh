@@ -18,6 +18,7 @@ app=$YNH_APP_INSTANCE_NAME
 
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 path_url=$(ynh_app_setting_get --app=$app --key=path)
+port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
 #=================================================
@@ -156,8 +157,8 @@ ynh_use_logrotate --non-append
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --time --weight=1
 
-yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/$app.log"
 yunohost service add wireguard --description "WireGuard" --needs_exposed_ports "$port_wg"
+yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/ui.log"
 
 #=================================================
 # START SYSTEMD SERVICE
@@ -165,7 +166,7 @@ yunohost service add wireguard --description "WireGuard" --needs_exposed_ports "
 ynh_script_progression --message="Starting a systemd service..." --time --weight=1
 
 # Start a systemd service
-ynh_systemd_action --service_name=wireguard_ui --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name=wireguard_ui --action="start" --log_path="/var/log/$app/ui.log"
 
 #=================================================
 # RELOAD NGINX
