@@ -33,6 +33,7 @@ path_url=$(ynh_app_setting_get --app=$app --key=path)
 port=$(ynh_app_setting_get --app=$app --key=port)
 port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+is_public=$(ynh_app_setting_get --app=$app --key=is_public)
 
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
@@ -117,6 +118,18 @@ ynh_restore_file --origin_path=$(jq -r ".config_file_path" $final_path/db/server
 ynh_script_progression --message="Starting a systemd service..." --time --weight=1
 
 ynh_systemd_action --service_name=wireguard_ui --action="start" --log_path="/var/log/$app/ui.log"
+
+#=================================================
+# SETUP SSOWAT
+#=================================================
+ynh_script_progression --message="Configuring permissions..." --time --weight=1
+
+if [ $is_public -eq 1 ]
+then
+	ynh_permission_update --permission "main" --add visitors
+else
+	ynh_permission_update --permission "main" --remove "all_users" --add "$admin"
+fi
 
 #=================================================
 # RESTORE THE LOGROTATE CONFIGURATION
