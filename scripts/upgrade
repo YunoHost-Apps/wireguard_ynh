@@ -22,14 +22,6 @@ port=$(ynh_app_setting_get --app=$app --key=port)
 port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
-# Change port for WireGuard UI because 8095 is default port for WireGuard VPN
-if [ $port -eq 8095 ]
-then
-	ynh_app_setting_delete --app=$app --key=port
-	port=$(ynh_find_port --port=8096)
-	ynh_app_setting_set --app=$app --key=port --value=$port
-fi
-
 #=================================================
 # CHECK VERSION
 #=================================================
@@ -51,6 +43,15 @@ ynh_script_progression --message="Ensuring downward compatibility..." --time --w
 if [ -z "$final_path" ]; then
 	final_path=/opt/yunohost/$app
 	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+fi
+
+# Change port for WireGuard UI because 8095 is default port for WireGuard VPN
+if [ $port -eq 8095 ]
+then
+	ynh_app_setting_delete --app=$app --key=port
+	port=$(ynh_find_port --port=8096)
+	ynh_app_setting_set --app=$app --key=port --value=$port
+	ynh_app_setting_set --app=$app --key=is_public --value=0
 fi
 
 #=================================================
@@ -77,6 +78,10 @@ ynh_script_progression --message="Stopping a systemd service..." --time --weight
 ynh_systemd_action --service_name=wireguard_ui --action="stop" --log_path="/var/log/$app/ui.log"
 systemctl disable --now --quiet wireguard.path
 ynh_systemd_action --service_name=wireguard --action="stop"
+
+ynh_remove_systemd_config --service=wireguard_ui
+ynh_secure_remove --file="/etc/systemd/system/wireguard.path"
+ynh_remove_systemd_config --service=wireguard
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -123,7 +128,7 @@ ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service --
 
 # Create a dedicated systemd config for monitoring WireGuard's configuration
 cp ../conf/wireguard.path /etc/systemd/system/wireguard.path
-systemctl enable wireguard.path
+systemctl enable --quiet wireguard.path
 
 # Create a dedicated systemd config for restarting WireGuard
 ynh_add_systemd_config --service=wireguard --template=wireguard.service --others_var="port_wg"
