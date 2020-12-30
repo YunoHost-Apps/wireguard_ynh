@@ -24,7 +24,7 @@ ynh_abort_if_errors
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --time --weight=1
+ynh_script_progression --message="Loading installation settings..." --weight=1
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -38,7 +38,7 @@ is_public=$(ynh_app_setting_get --app=$app --key=is_public)
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
 #=================================================
-ynh_script_progression --message="Validating restoration parameters..." --time --weight=1
+ynh_script_progression --message="Validating restoration parameters..." --weight=1
 
 ynh_webpath_available --domain=$domain --path_url=$path_url \
 	|| ynh_die --message="Path not available: ${domain}${path_url}"
@@ -56,14 +56,14 @@ ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
-ynh_script_progression --message="Restoring the app main directory..." --time --weight=1
+ynh_script_progression --message="Restoring the app main directory..." --weight=1
 
 ynh_restore_file --origin_path="$final_path"
 
 #=================================================
 # RECREATE THE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Recreating the dedicated system user..." --time --weight=1
+ynh_script_progression --message="Recreating the dedicated system user..." --weight=1
 
 # Create the dedicated user (if not existing)
 ynh_system_user_create --username=$app
@@ -82,7 +82,7 @@ chmod -R 750 $final_path/db
 #=================================================
 # REINSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Reinstalling dependencies..." --time --weight=1
+ynh_script_progression --message="Reinstalling dependencies..." --weight=5
 
 # Define and install dependencies
 ynh_install_extra_app_dependencies --repo="http://http.debian.net/debian buster-backports main" --package=$pkg_dependencies
@@ -90,7 +90,7 @@ ynh_install_extra_app_dependencies --repo="http://http.debian.net/debian buster-
 #=================================================
 # RESTORE SYSTEMD
 #=================================================
-ynh_script_progression --message="Restoring the systemd configuration..." --time --weight=1
+ynh_script_progression --message="Restoring the systemd configuration..." --weight=1
 
 ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui.service
 ynh_restore_file --origin_path=/etc/systemd/system/wireguard.path
@@ -101,7 +101,7 @@ systemctl enable --quiet wireguard.path
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
-ynh_script_progression --message="Integrating service in YunoHost..." --time --weight=1
+ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
 yunohost service add wireguard --description "WireGuard" --needs_exposed_ports $port_wg
 yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/ui.log"
@@ -115,14 +115,14 @@ ynh_restore_file --origin_path=$(jq -r ".config_file_path" $final_path/db/server
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --time --weight=1
+ynh_script_progression --message="Starting a systemd service..." --weight=1
 
 ynh_systemd_action --service_name=wireguard_ui --action="start" --log_path="/var/log/$app/ui.log"
 
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring permissions..." --time --weight=1
+ynh_script_progression --message="Configuring permissions..." --weight=1
 
 if [ $is_public -eq 1 ]
 then
@@ -142,7 +142,7 @@ ynh_restore_file --origin_path="/etc/logrotate.d/$app"
 #=================================================
 # RELOAD NGINX AND PHP-FPM
 #=================================================
-ynh_script_progression --message="Reloading nginx web server and php-fpm..." --time --weight=1
+ynh_script_progression --message="Reloading nginx web server and php-fpm..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 
@@ -150,4 +150,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Restoration completed for $app" --time --last
+ynh_script_progression --message="Restoration completed for $app" --last
