@@ -34,7 +34,7 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
-ynh_script_progression --message="Validating installation parameters..." --time --weight=1
+ynh_script_progression --message="Validating installation parameters..." --weight=1
 
 final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
@@ -45,7 +45,7 @@ ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
-ynh_script_progression --message="Storing installation settings..." --time --weight=1
+ynh_script_progression --message="Storing installation settings..." --weight=1
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
@@ -57,7 +57,7 @@ ynh_app_setting_set --app=$app --key=is_public --value=$is_public # Forced to us
 #=================================================
 # FIND AND OPEN A PORT
 #=================================================
-ynh_script_progression --message="Configuring firewall..." --time --weight=1
+ynh_script_progression --message="Configuring firewall..." --weight=1
 
 # Find an available port for WireGuard
 port_wg=$(ynh_find_port --port=8095)
@@ -73,14 +73,14 @@ ynh_exec_warn_less yunohost firewall allow --no-upnp UDP $port_wg
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Installing dependencies..." --time --weight=1
+ynh_script_progression --message="Installing dependencies..." --weight=7
 
 ynh_install_extra_app_dependencies --repo="http://deb.debian.org/debian buster-backports main" --package="$pkg_dependencies"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --time --weight=1
+ynh_script_progression --message="Setting up source files..." --weight=1
 
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
@@ -89,7 +89,7 @@ ynh_setup_source --dest_dir="$final_path" --source_id="$(ynh_detect_arch)"
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring nginx web server..." --time --weight=1
+ynh_script_progression --message="Configuring nginx web server..." --weight=1
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
@@ -97,7 +97,7 @@ ynh_add_nginx_config
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Configuring system user..." --time --weight=1
+ynh_script_progression --message="Configuring system user..." --weight=1
 
 # Create a system user
 ynh_system_user_create --username=$app
@@ -126,7 +126,7 @@ ynh_replace_string --match_string="__PRIVATE_KEY__" --replace_string="$(wg genke
 #=================================================
 # SETUP SYSTEMD
 #=================================================
-ynh_script_progression --message="Configuring a systemd service..." --time --weight=1
+ynh_script_progression --message="Configuring a systemd service..." --weight=1
 
 # Create a dedicated systemd config for the web UI
 ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service --others_var="port"
@@ -158,7 +158,7 @@ chown -R $app:$app /etc/wireguard
 #=================================================
 # SETUP LOGROTATE
 #=================================================
-ynh_script_progression --message="Configuring log rotation..." --time --weight=1
+ynh_script_progression --message="Configuring log rotation..." --weight=1
 
 ### `ynh_use_logrotate` is used to configure a logrotate configuration for the logs of this app.
 ### Use this helper only if there is effectively a log file for this app.
@@ -174,7 +174,7 @@ ynh_use_logrotate
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
-ynh_script_progression --message="Integrating service in YunoHost..." --time --weight=1
+ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
 yunohost service add wireguard --description "WireGuard" --needs_exposed_ports $port_wg
 yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/ui.log"
@@ -199,7 +199,7 @@ yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --time --weight=1
+ynh_script_progression --message="Starting a systemd service..." --weight=1
 
 # Start a systemd service
 ynh_systemd_action --service_name=wireguard_ui --action="start" --log_path="/var/log/$app/ui.log"
@@ -207,7 +207,7 @@ ynh_systemd_action --service_name=wireguard_ui --action="start" --log_path="/var
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring permissions..." --time --weight=1
+ynh_script_progression --message="Configuring permissions..." --weight=1
 
 # Make app public if necessary to pass root installation check
 if [ $is_public -eq 1 ]
@@ -220,7 +220,7 @@ fi
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
+ynh_script_progression --message="Reloading nginx web server..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 
@@ -228,4 +228,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --time --last
+ynh_script_progression --message="Installation of $app completed" --last
