@@ -39,14 +39,15 @@ fi
 #=================================================
 ynh_script_progression --message="Stopping and removing the systemd service..." --weight=1
 
-# Remove the dedicated systemd configs
-ynh_remove_systemd_config --service=wireguard
-ynh_remove_systemd_config --service=wireguard_ui
-
+# YunoHost does not handle services not ending with .service, let's remove it manually
 systemctl stop wireguard.path
 systemctl disable wireguard.path --quiet
 ynh_secure_remove --file="/etc/systemd/system/wireguard.path"
 systemctl daemon-reload
+
+# Remove the dedicated systemd configs
+ynh_remove_systemd_config --service=wireguard
+ynh_remove_systemd_config --service=wireguard_ui
 
 #=================================================
 # REMOVE DEPENDENCIES
