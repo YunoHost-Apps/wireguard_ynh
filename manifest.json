@@ -6,7 +6,7 @@
         "en": "Virtual Private Networks (VPN) via WireGuard, with a web UI",
         "fr": "Réseaux Privés Virtuels (VPN) via WireGuard, avec une web UI"
     },
-    "version": "0.2.7~ynh1",
+    "version": "0.2.7~ynh2",
     "url": "https://github.com/ngoduykhanh/wireguard-ui",
     "license": "MIT",
     "maintainer": {
