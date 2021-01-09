@@ -59,7 +59,10 @@ arch=$(ynh_detect_arch)
 linuximage_version=$(ynh_package_version --package=linux-image-$arch)
 if [[ $linuximage_version == *"bpo10"* ]]
 then
-	ynh_package_install linux-image-$arch/stable
+	# Downgrading using ynh_package_install (exploded) without "--no-remove"
+	# It will remove wireguard-ynh-deps and wireguard but they will be reinstalled throught upgrade process
+	ynh_apt --option Dpkg::Options::=--force-confdef \
+        --option Dpkg::Options::=--force-confold install linux-image-$arch/stable
 fi
 
 #=================================================
