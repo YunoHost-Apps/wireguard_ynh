@@ -59,8 +59,7 @@ arch=$(ynh_detect_arch)
 linuximage_version=$(ynh_package_version --package=linux-image-$arch)
 if [[ $linuximage_version == *"bpo10"* ]]
 then
-	ynh_package_remove linux-image-$arch
-	ynh_package_install linux-image-$arch
+	ynh_package_install linux-image-$arch/stable
 fi
 
 #=================================================
