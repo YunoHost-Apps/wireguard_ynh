@@ -54,6 +54,15 @@ then
 	ynh_app_setting_set --app=$app --key=is_public --value=0
 fi
 
+# Downgrade linux-image-$arch if updated to the buster-backports version
+arch=$(ynh_detect_arch)
+linuximage_version=$(ynh_package_version --package=linux-image-$arch)
+if [[ $linuximage_version == *"bpo10"* ]]
+then
+	ynh_package_remove linux-image-$arch
+	ynh_package_install linux-image-$arch
+fi
+
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
