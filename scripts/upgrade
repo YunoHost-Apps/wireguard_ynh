@@ -63,6 +63,18 @@ then
 	# It will remove wireguard-ynh-deps and wireguard but they will be reinstalled throught upgrade process
 	ynh_apt --allow-downgrades --option Dpkg::Options::=--force-confdef \
         --option Dpkg::Options::=--force-confold install linux-image-$arch/stable
+
+	#Remove backports kernel if running on it and send a mail to the admin to ask him to reboot
+	linuxkernel_version = $(uname -r)
+	if [[ $linuxkernel_version == *"bpo"* ]]
+	then
+		ynh_package_remove linux-image-$linuxkernel_version
+
+		echo "You've been using an experimental version of wireguard_ynh, which was using the backports version of the linux kernel.
+Now wireguard_ynh use a DKMS module allowing itself to be used with the stable kernel, then the backports one was removed and a reboot is needed to go back to the stable one." > mail_to_send
+
+		ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="admin" --type=upgrade
+	fi
 fi
 
 #=================================================
@@ -120,7 +132,7 @@ ynh_script_progression --message="Upgrading dependencies..." --weight=7
 #Add buster-backports repo
 ynh_add_repo --uri="http://deb.debian.org/debian" --suite="buster-backports" --component="main" --name="$app"
 
-#Add pin-priority for wireguard package
+#Add pin-priority for wireguard packages
 ynh_pin_repo --package="wireguard*" --pin="origin deb http://deb.debian.org/debian buster-backports main" --priority=995 --name="$app"
 
 # Update the list of package with the new repo
