@@ -5,7 +5,9 @@
 
 *[Lire ce readme en français.](./README_fr.md)*
 
-:warning: This app is still experimental. WireGuard requires upgrading your Linux kernel to another major version. Check its compatibility before running it on a production system. :warning:
+:warning: This app is still experimental. Check its compatibility before running it on a production system. :warning:
+
+:exclamation: WireGuard for YunoHost will add a DMKS module to your Linux kernel.
 
 > *This package allows you to install WireGuard quickly and simply on a YunoHost server.  
 If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/install) to learn how to install it.*
