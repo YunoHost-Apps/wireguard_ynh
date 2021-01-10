@@ -65,10 +65,10 @@ then
         --option Dpkg::Options::=--force-confold install linux-image-$arch/stable
 
 	#Remove backports kernel if running on it and send a mail to the admin to ask him to reboot
-	linuxkernel_version = $(uname -r)
+	linuxkernel_version=$(uname -r)
 	if [[ $linuxkernel_version == *"bpo"* ]]
 	then
-		ynh_package_remove "linux-image-$linuxkernel_version"
+		ynh_package_remove linux-image-$linuxkernel_version
 
 		echo "You've been using an experimental version of wireguard_ynh, which was using the backports version of the linux kernel.
 Now wireguard_ynh use a DKMS module allowing itself to be used with the stable kernel, then the backports one was removed and a reboot is needed to go back to the stable one." > mail_to_send
