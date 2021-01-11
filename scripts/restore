@@ -133,18 +133,6 @@ ynh_script_progression --message="Starting a systemd service..." --weight=1
 ynh_systemd_action --service_name=wireguard_ui --action="start" --log_path="/var/log/$app/ui.log"
 
 #=================================================
-# SETUP SSOWAT
-#=================================================
-ynh_script_progression --message="Configuring permissions..." --weight=1
-
-if [ $is_public -eq 1 ]
-then
-	ynh_permission_update --permission "main" --add visitors
-else
-	ynh_permission_update --permission "main" --remove "all_users" --add "$admin"
-fi
-
-#=================================================
 # RESTORE THE LOGROTATE CONFIGURATION
 #=================================================
 
