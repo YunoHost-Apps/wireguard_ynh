@@ -80,5 +80,5 @@ Pour essayer la branche testing, procédez comme suit.
 ```
 sudo yunohost app install https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
 ou
-sudo yunohost app upgrade REPLACEBYYOURAPP -u https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
+sudo yunohost app upgrade wireguard -u https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
 ```
