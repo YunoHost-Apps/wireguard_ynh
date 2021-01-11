@@ -75,10 +75,10 @@ ynh_exec_warn_less yunohost firewall allow --no-upnp UDP $port_wg
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=7
 
-#Add buster-backports repo
+# Add buster-backports repo
 ynh_add_repo --uri="http://deb.debian.org/debian" --suite="buster-backports" --component="main" --name="$app"
 
-#Add pin-priority for wireguard packages
+# Add pin-priority for wireguard packages
 ynh_pin_repo --package="wireguard*" --pin="origin deb http://deb.debian.org/debian buster-backports main" --priority=995 --name="$app"
 
 # Update the list of package with the new repo
@@ -86,7 +86,7 @@ ynh_package_update
 
 ynh_add_app_dependencies --package="$pkg_dependencies"
 
-#Remove buster-backports repo and pin-priority
+# Remove buster-backports repo and pin-priority
 ynh_remove_extra_repo --name=$app
 
 #=================================================
@@ -160,10 +160,6 @@ ynh_add_systemd_config --service=wireguard --template=wireguard.service --others
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-### For security reason, any app should set the permissions to root: before anything else.
-### Then, if write authorization is needed, any access should be given only to directories
-### that really need such authorization.
-
 # Set permissions to app files
 chown -R root: $final_path
 chown -R $app: $final_path/db
@@ -176,14 +172,6 @@ chown -R $app:$app /etc/wireguard
 #=================================================
 ynh_script_progression --message="Configuring log rotation..." --weight=1
 
-### `ynh_use_logrotate` is used to configure a logrotate configuration for the logs of this app.
-### Use this helper only if there is effectively a log file for this app.
-### If you're not using this helper:
-###		- Remove the section "BACKUP LOGROTATE" in the backup script
-###		- Remove also the section "REMOVE LOGROTATE CONFIGURATION" in the remove script
-###		- As well as the section "RESTORE THE LOGROTATE CONFIGURATION" in the restore script
-###		- And the section "SETUP LOGROTATE" in the upgrade script
-
 # Use logrotate to manage application logfile(s)
 ynh_use_logrotate
 
@@ -194,23 +182,6 @@ ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
 yunohost service add wireguard --description "WireGuard" --needs_exposed_ports $port_wg --test_status "wg show | grep wg0"
 yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/ui.log"
-
-### Additional options starting with 3.8:
-###
-### --needs_exposed_ports "$port" a list of ports that needs to be publicly exposed
-###                               which will then be checked by YunoHost's diagnosis system
-###                               (N.B. DO NOT USE THIS is the port is only internal !!!)
-###
-### --test_status "some command"  a custom command to check the status of the service
-###                               (only relevant if 'systemctl status' doesn't do a good job)
-###
-### --test_conf "some command"    some command similar to "nginx -t" that validates the conf of the service
-###
-### Re-calling 'yunohost service add' during the upgrade script is the right way
-### to proceed if you later realize that you need to enable some flags that
-### weren't enabled on old installs (be careful it'll override the existing
-### service though so you should re-provide all relevant flags when doing so)
-###
 
 #=================================================
 # START SYSTEMD SERVICE

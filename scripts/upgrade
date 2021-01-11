@@ -26,12 +26,6 @@ final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 # CHECK VERSION
 #=================================================
 
-### This helper will compare the version of the currently installed app and the version of the upstream package.
-### $upgrade_type can have 2 different values
-### - UPGRADE_APP if the upstream app version has changed
-### - UPGRADE_PACKAGE if only the YunoHost package has changed
-### ynh_check_app_version_changed will stop the upgrade if the app is up to date.
-### UPGRADE_APP should be used to upgrade the core app only if there's an upgrade to do.
 upgrade_type=$(ynh_check_app_version_changed)
 
 #=================================================
@@ -135,10 +129,10 @@ ynh_script_progression --message="Upgrading dependencies..." --weight=7
 
 #TODO: remove buster-backports kernel
 
-#Add buster-backports repo
+# Add buster-backports repo
 ynh_add_repo --uri="http://deb.debian.org/debian" --suite="buster-backports" --component="main" --name="$app"
 
-#Add pin-priority for wireguard packages
+# Add pin-priority for wireguard packages
 ynh_pin_repo --package="wireguard*" --pin="origin deb http://deb.debian.org/debian buster-backports main" --priority=995 --name="$app"
 
 # Update the list of package with the new repo
@@ -146,7 +140,7 @@ ynh_package_update
 
 ynh_add_app_dependencies --package="$pkg_dependencies"
 
-#Remove buster-backports repo and pin-priority
+# Remove buster-backports repo and pin-priority
 ynh_remove_extra_repo --name=$app
 
 #=================================================
