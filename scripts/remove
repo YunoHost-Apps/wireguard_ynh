@@ -95,6 +95,15 @@ then
 fi
 
 #=================================================
+# SPECIFIC REMOVE
+#=================================================
+# REMOVE VARIOUS FILES
+#=================================================
+
+# Remove sudoers file
+ynh_secure_remove --file="/etc/sudoers.d/${app}_ynh"
+
+#=================================================
 # GENERIC FINALIZATION
 #=================================================
 # REMOVE DEDICATED USER
