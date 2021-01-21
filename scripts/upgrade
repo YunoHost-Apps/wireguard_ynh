@@ -50,7 +50,8 @@ then
 fi
 
 # WireGuard UI should be private, really.
-if [ $(ynh_permission_has_user --permission=main --user=visitors) -eq 1 ]; then
+if ynh_permission_has_user --permission=main --user=visitors
+then
         ynh_permission_update --permission=main --remove=visitors
 fi
 
