@@ -39,11 +39,11 @@ if [ -z "$final_path" ]; then
 	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 fi
 
-# Change port for WireGuard UI because 8095 is default port for WireGuard VPN
-if [ $port -eq 8095 ]
+# Change port if WireGuard port is the same as WireGuard UI's
+if [ $port -eq $port_wg ]
 then
 	ynh_app_setting_delete --app=$app --key=port
-	port=$(ynh_find_port --port=8096)
+	port=$(ynh_find_port --port=$(($port_wg+1)))
 	ynh_app_setting_set --app=$app --key=port --value=$port
 	ynh_app_setting_set --app=$app --key=is_public --value=0
 fi
