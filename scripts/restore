@@ -132,7 +132,7 @@ ynh_restore_file --origin_path=$(jq -r ".config_file_path" $final_path/db/server
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=wireguard_ui --action="start" --log_path="/var/log/$app/ui.log"
+ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd"
 
 #=================================================
 # RESTORE THE LOGROTATE CONFIGURATION

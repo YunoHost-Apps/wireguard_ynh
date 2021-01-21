@@ -187,7 +187,7 @@ yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$
 ynh_script_progression --message="Starting a systemd service..." --weight=1
 
 # Start a systemd service
-ynh_systemd_action --service_name=wireguard_ui --action="start" --log_path="/var/log/$app/ui.log"
+ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd"
 
 #=================================================
 # SETUP SSOWAT
