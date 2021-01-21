@@ -49,6 +49,11 @@ then
 	ynh_app_setting_delete --app=$app --key=is_public
 fi
 
+# WireGuard UI should be private, really.
+if [ $(ynh_permission_has_user --permission=main --user=visitors) -eq 1 ]; then
+        ynh_permission_update --permission=main --remove=visitors
+fi
+
 # Downgrade linux-image-$arch if updated to the buster-backports version
 arch=$(ynh_detect_arch)
 linuximage_version=$(ynh_package_version --package=linux-image-$arch)
