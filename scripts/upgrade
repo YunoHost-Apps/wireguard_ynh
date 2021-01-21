@@ -105,7 +105,7 @@ ynh_abort_if_errors
 #=================================================
 ynh_script_progression --message="Stopping a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=wireguard_ui --action="stop" --line_match="Stopped WireGuard UI" --log_path="systemd"
+ynh_systemd_action --service_name=wireguard_ui --action="stop" --line_match="Stopped WireGuard UI" --log_path="systemd" --timeout=30
 systemctl disable --now --quiet wireguard.path
 ynh_systemd_action --service_name=wireguard --action="stop"
 
@@ -217,7 +217,8 @@ yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$
 ynh_script_progression --message="Starting a systemd service..." --weight=1
 
 # Start a systemd service
-ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd"
+ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
+sleep 5
 
 #=================================================
 # RELOAD NGINX
