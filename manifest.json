@@ -61,19 +61,6 @@
                     "fr": "Choisissez l’administrateur"
                 },
                 "example": "johndoe"
-            },
-            {
-                "name": "is_public",
-                "type": "boolean",
-                "ask": {
-                    "en": "Is it a public application?",
-                    "fr": "Est-ce une application publique ?"
-                },
-                "help": {
-                    "en": "It is strongly advised to keep the configuration UI private.",
-                    "fr": "Il est fortement conseillé de garder l'interface de configuration privée."
-                },
-                "default": false
             }
         ]
     }

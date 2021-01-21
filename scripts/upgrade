@@ -45,7 +45,8 @@ then
 	ynh_app_setting_delete --app=$app --key=port
 	port=$(ynh_find_port --port=$(($port_wg+1)))
 	ynh_app_setting_set --app=$app --key=port --value=$port
-	ynh_app_setting_set --app=$app --key=is_public --value=0
+	# Let's remove the unused is_public key too
+	ynh_app_setting_delete --app=$app --key=is_public
 fi
 
 # Downgrade linux-image-$arch if updated to the buster-backports version

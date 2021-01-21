@@ -27,7 +27,6 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH #TODO: Check if possible with wireguard_ui to use sub path
 admin=$YNH_APP_ARG_ADMIN
-is_public=$YNH_APP_ARG_IS_PUBLIC # Forced to use it to pass root installation check as public
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -50,7 +49,6 @@ ynh_script_progression --message="Storing installation settings..." --weight=1
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=admin --value=$admin
-ynh_app_setting_set --app=$app --key=is_public --value=$is_public # Forced to use it to pass root installation check as public
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -196,13 +194,7 @@ ynh_systemd_action --service_name=wireguard_ui --action="start" --log_path="/var
 #=================================================
 ynh_script_progression --message="Configuring permissions..." --weight=1
 
-# Make app public if necessary to pass root installation check
-if [ $is_public -eq 1 ]
-then
-	ynh_permission_update --permission "main" --add visitors
-else
-	ynh_permission_update --permission "main" --remove "all_users" --add "$admin"
-fi
+ynh_permission_update --permission "main" --remove "all_users" --add "$admin"
 
 #=================================================
 # RELOAD NGINX

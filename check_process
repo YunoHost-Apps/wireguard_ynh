@@ -8,10 +8,6 @@
 		domain="domain.tld"	(DOMAIN)
 		path="/"	(PATH)
 		admin="john"	(USER)
-		#language="fr"
-		is_public=1	(PUBLIC|public=1|private=0)
-		#password="pass"
-		#port="666"	(PORT)
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=0
@@ -34,5 +30,5 @@ Notification=none
 ;;; Upgrade options
 	; commit=797a3e5990571629a8525764ce6e8d359277313f
 		name=a version using backport kernel
-		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&is_public=1&
+		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&is_public=0&
 
