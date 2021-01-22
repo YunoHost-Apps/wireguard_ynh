@@ -26,8 +26,8 @@
                 "name": "warning",
                 "type": "display_text",
                 "ask": {
-                    "en": "WireGuard is still experimental. The WireGuard package for YunoHost will add a DMKS module to your Linux kernel.\n\nCheck its compatibility before installing it on a production system.",
-                    "fr": "WireGuard est encore expérimental. Le package WireGuard pour YunoHost va installer un module DKMS à votre kernel Linux.\n\nVérifiez sa compatibilité avant de l'installer sur un serveur de production."
+                    "en": "WireGuard installs a Linux kernel module and will most likely require a reboot of your server to work properly.",
+                    "fr": "WireGuard installe un module au noyau Linux et nécessite probablement un redémarrage du serveur pour fonctionner correctement."
                 }
             },
             {
