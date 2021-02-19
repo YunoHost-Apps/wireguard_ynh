@@ -12,30 +12,26 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --time --weight=1
+ynh_script_progression --message="Loading installation settings..." --weight=1
 
 app=$YNH_APP_INSTANCE_NAME
 
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 path_url=$(ynh_app_setting_get --app=$app --key=path)
+port=$(ynh_app_setting_get --app=$app --key=port)
+port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
 #=================================================
 # CHECK VERSION
 #=================================================
 
-### This helper will compare the version of the currently installed app and the version of the upstream package.
-### $upgrade_type can have 2 different values
-### - UPGRADE_APP if the upstream app version has changed
-### - UPGRADE_PACKAGE if only the YunoHost package has changed
-### ynh_check_app_version_changed will stop the upgrade if the app is up to date.
-### UPGRADE_APP should be used to upgrade the core app only if there's an upgrade to do.
 upgrade_type=$(ynh_check_app_version_changed)
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
-ynh_script_progression --message="Ensuring downward compatibility..." --time --weight=1
+ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
 
 # If final_path doesn't exist, create it
 if [ -z "$final_path" ]; then
@@ -43,10 +39,55 @@ if [ -z "$final_path" ]; then
 	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 fi
 
+# Change port if WireGuard port is the same as WireGuard UI's
+if [ $port -eq $port_wg ]
+then
+	ynh_app_setting_delete --app=$app --key=port
+	port=$(ynh_find_port --port=$(($port_wg+1)))
+	ynh_app_setting_set --app=$app --key=port --value=$port
+	# Let's remove the unused is_public key too
+	ynh_app_setting_delete --app=$app --key=is_public
+fi
+
+# WireGuard UI should be private, really.
+if ynh_permission_has_user --permission=main --user=visitors
+then
+        ynh_permission_update --permission=main --remove=visitors
+fi
+
+# Downgrade linux-image-$arch if updated to the buster-backports version
+arch=$(ynh_detect_arch)
+linuximage_version=$(ynh_package_version --package=linux-image-$arch)
+if [[ $linuximage_version == *"bpo10"* ]]
+then
+	# Downgrading using ynh_package_install apt command without "--no-remove" and with "--allow-downgrades"
+	# It will remove wireguard-ynh-deps and wireguard but they will be reinstalled throught upgrade process
+	ynh_apt --allow-downgrades --option Dpkg::Options::=--force-confdef \
+        --option Dpkg::Options::=--force-confold install linux-image-$arch/stable
+
+	#Remove backports kernel if running on it and send a mail to the admin to ask him to reboot
+	linuxkernel_version=$(uname -r)
+	if [[ $linuxkernel_version == *"bpo"* ]]
+	then
+		ynh_package_remove linux-image-$linuxkernel_version
+
+		echo "You've been using an experimental version of wireguard_ynh, which was using the backports version of the linux kernel.
+Now wireguard_ynh use a DKMS module allowing itself to be used with the stable kernel, then the backports one was removed and a reboot is needed to go back to the stable one." > mail_to_send
+
+		ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="admin" --type=upgrade
+	fi
+fi
+
+# Add sudoers file if missing
+if [ -f "/etc/sudoers.d/${app}_ynh" ]; then
+	install -b -o root -g root -m 0440 ../conf/sudoers.conf /etc/sudoers.d/${app}_ynh
+	ynh_replace_string "__USER__" "${app}" /etc/sudoers.d/${app}_ynh
+fi
+
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
-ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --time --weight=1
+ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=1
 
 # Backup the current version of the app
 ynh_backup_before_upgrade
@@ -62,11 +103,11 @@ ynh_abort_if_errors
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Stopping a systemd service..." --time --weight=1
+ynh_script_progression --message="Stopping a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=wireguard_ui --action="stop" --log_path="/var/log/$app/ui.log"
+ynh_systemd_action --service_name=wireguard_ui --action="stop" --line_match="Stopped WireGuard UI" --log_path="systemd" --timeout=30
+systemctl disable --now --quiet wireguard.path
 ynh_systemd_action --service_name=wireguard --action="stop"
-ynh_systemd_action --service_name=wireguard_path --action="stop"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -74,16 +115,16 @@ ynh_systemd_action --service_name=wireguard_path --action="stop"
 
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
-	ynh_script_progression --message="Upgrading source files..." --time --weight=1
+	ynh_script_progression --message="Upgrading source files..." --weight=1
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path"
+	ynh_setup_source --dest_dir="$final_path" --source_id="$(ynh_detect_arch)"
 fi
 
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Upgrading nginx web server configuration..." --time --weight=1
+ynh_script_progression --message="Upgrading nginx web server configuration..." --weight=1
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
@@ -91,14 +132,28 @@ ynh_add_nginx_config
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Upgrading dependencies..." --time --weight=1
+ynh_script_progression --message="Upgrading dependencies..." --weight=7
 
-ynh_install_extra_app_dependencies --repo="http://deb.debian.org/debian buster-backports main" --package="$pkg_dependencies"
+#TODO: remove buster-backports kernel
+
+# Add buster-backports repo
+ynh_add_repo --uri="http://deb.debian.org/debian" --suite="buster-backports" --component="main" --name="$app"
+
+# Add pin-priority for wireguard packages
+ynh_pin_repo --package="wireguard*" --pin="origin deb http://deb.debian.org/debian buster-backports main" --priority=995 --name="$app"
+
+# Update the list of package with the new repo
+ynh_package_update
+
+ynh_add_app_dependencies --package="$pkg_dependencies"
+
+# Remove buster-backports repo and pin-priority
+ynh_remove_extra_repo --name=$app
 
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Making sure dedicated system user exists..." --time --weight=1
+ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
 
 # Create a dedicated user (if not existing)
 ynh_system_user_create --username=$app
@@ -106,20 +161,17 @@ ynh_system_user_create --username=$app
 #=================================================
 # SETUP SYSTEMD
 #=================================================
-ynh_script_progression --message="Upgrading systemd configuration..." --time --weight=1
+ynh_script_progression --message="Upgrading systemd configuration..." --weight=1
 
 # Create a dedicated systemd config for the web UI
 ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service --others_var="port"
 
 # Create a dedicated systemd config for monitoring WireGuard's configuration
 cp ../conf/wireguard.path /etc/systemd/system/wireguard.path
-systemctl enable wireguard.path
+systemctl enable --quiet wireguard.path
 
 # Create a dedicated systemd config for restarting WireGuard
-cp ../conf/wireguard.service /etc/systemd/system/wireguard.service
-ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --target_file="/etc/systemd/system/wireguard.service"
-systemctl enable wireguard.service
-#ynh_exec_fully_quiet ynh_add_systemd_config --service=wireguard --template=wireguard.service --others_var="port_wg"
+ynh_add_systemd_config --service=wireguard --template=wireguard.service --others_var="port_wg"
 
 #=================================================
 # CONFIGURING WIREGUARD
@@ -141,12 +193,12 @@ ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --ta
 # Set permissions on app files
 chown -R root: $final_path
 chown -R $app: $final_path/db
-chmod 750 -R $final_path/db
+chmod -R 750 $final_path/db
 
 #=================================================
 # SETUP LOGROTATE
 #=================================================
-ynh_script_progression --message="Upgrading logrotate configuration..." --time --weight=1
+ynh_script_progression --message="Upgrading logrotate configuration..." --weight=1
 
 # Use logrotate to manage app-specific logfile(s)
 ynh_use_logrotate --non-append
@@ -154,23 +206,24 @@ ynh_use_logrotate --non-append
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
-ynh_script_progression --message="Integrating service in YunoHost..." --time --weight=1
+ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/$app.log"
-yunohost service add wireguard --description "WireGuard" --needs_exposed_ports "$port_wg"
+yunohost service add wireguard --description "WireGuard" --needs_exposed_ports "$port_wg" --test_status "wg show | grep wg0"
+yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/ui.log"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --time --weight=1
+ynh_script_progression --message="Starting a systemd service..." --weight=1
 
 # Start a systemd service
-ynh_systemd_action --service_name=wireguard_ui --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
+sleep 5
 
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
+ynh_script_progression --message="Reloading nginx web server..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 
@@ -178,4 +231,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed" --time --last
+ynh_script_progression --message="Upgrade of $app completed" --last

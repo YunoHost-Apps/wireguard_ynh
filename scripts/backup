@@ -49,13 +49,6 @@ ynh_backup --src_path="$final_path"
 ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 
 #=================================================
-# BACKUP FAIL2BAN CONFIGURATION
-#=================================================
-
-ynh_backup --src_path="/etc/fail2ban/jail.d/$app.conf"
-ynh_backup --src_path="/etc/fail2ban/filter.d/$app.conf"
-
-#=================================================
 # SPECIFIC BACKUP
 #=================================================
 # BACKUP LOGROTATE
@@ -68,6 +61,9 @@ ynh_backup --src_path="/etc/logrotate.d/$app"
 #=================================================
 
 ynh_backup --src_path="/etc/systemd/system/$app.service"
+ynh_backup --src_path=/etc/systemd/system/wireguard_ui.service
+ynh_backup --src_path=/etc/systemd/system/wireguard.path
+ynh_backup --src_path="/etc/sudoers.d/${app}_ynh"
 
 #=================================================
 # BACKUP VARIOUS FILES

@@ -1,11 +1,13 @@
 # WireGuard pour YunoHost
 
 [![Niveau d'intégration](https://dash.yunohost.org/integration/wireguard.svg)](https://dash.yunohost.org/appci/app/wireguard) ![](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)  
-[![Installer WireGuard avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=wireguard)
+[![Installer WireGuard avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 
 *[Read this readme in english.](./README.md)* 
 
-:warning: Cette app est encore expérimentale. WireGuard requiert de mettre à niveau votre noyau Linux. Vérifiez sa compatibilté avant de lancer l'installation sur un serveur de production. :warning:
+:warning: Cette app est encore expérimentale. Vérifiez sa compatibilté avant de lancer l'installation sur un serveur de production. :warning:
+
+:exclamation: WireGuard pour YunoHost ajoutera un module DKMS à votre noyau Linux.
 
 > *Ce package vous permet d'installer WireGuard rapidement et simplement sur un serveur YunoHost.  
 Si vous n'avez pas YunoHost, consultez [le guide](https://yunohost.org/#/install) pour apprendre comment l'installer.*
@@ -78,5 +80,5 @@ Pour essayer la branche testing, procédez comme suit.
 ```
 sudo yunohost app install https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
 ou
-sudo yunohost app upgrade REPLACEBYYOURAPP -u https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
+sudo yunohost app upgrade wireguard -u https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
 ```

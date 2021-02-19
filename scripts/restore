@@ -24,18 +24,20 @@ ynh_abort_if_errors
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --time --weight=1
+ynh_script_progression --message="Loading installation settings..." --weight=1
 
 app=$YNH_APP_INSTANCE_NAME
 
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 path_url=$(ynh_app_setting_get --app=$app --key=path)
+port=$(ynh_app_setting_get --app=$app --key=port)
+port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
 #=================================================
-ynh_script_progression --message="Validating restoration parameters..." --time --weight=1
+ynh_script_progression --message="Validating restoration parameters..." --weight=1
 
 ynh_webpath_available --domain=$domain --path_url=$path_url \
 	|| ynh_die --message="Path not available: ${domain}${path_url}"
@@ -53,17 +55,20 @@ ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
-ynh_script_progression --message="Restoring the app main directory..." --time --weight=1
+ynh_script_progression --message="Restoring the app main directory..." --weight=1
 
 ynh_restore_file --origin_path="$final_path"
 
 #=================================================
 # RECREATE THE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Recreating the dedicated system user..." --time --weight=1
+ynh_script_progression --message="Recreating the dedicated system user..." --weight=1
 
 # Create the dedicated user (if not existing)
 ynh_system_user_create --username=$app
+
+# Restore sudoers file
+ynh_restore_file --origin_path="/etc/sudoers.d/${app}_ynh"
 
 #=================================================
 # RESTORE USER RIGHTS
@@ -72,32 +77,49 @@ ynh_system_user_create --username=$app
 # Restore permissions on app files
 chown -R root: $final_path
 chown -R $app: $final_path/db
-chmod 660 -R $final_path/db
+chmod -R 750 $final_path/db
 
 #=================================================
 # SPECIFIC RESTORATION
 #=================================================
 # REINSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Reinstalling dependencies..." --time --weight=1
+ynh_script_progression --message="Reinstalling dependencies..." --weight=5
 
 # Define and install dependencies
-ynh_install_extra_app_dependencies --repo="http://http.debian.net/debian buster-backports main" --package=$pkg_dependencies
+
+#Add buster-backports repo
+ynh_add_repo --uri="http://deb.debian.org/debian" --suite="buster-backports" --component="main" --name="$app"
+
+#Add pin-priority for wireguard packages
+ynh_pin_repo --package="wireguard*" --pin="origin deb http://deb.debian.org/debian buster-backports main" --priority=995 --name="$app"
+
+# Update the list of package with the new repo
+ynh_package_update
+
+ynh_add_app_dependencies --package="$pkg_dependencies"
+
+#Remove buster-backports repo and pin-priority
+ynh_remove_extra_repo --name=$app
 
 #=================================================
 # RESTORE SYSTEMD
 #=================================================
-ynh_script_progression --message="Restoring the systemd configuration..." --time --weight=1
+ynh_script_progression --message="Restoring the systemd configuration..." --weight=1
 
+ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui.service
+ynh_restore_file --origin_path=/etc/systemd/system/wireguard.path
 ynh_restore_file --origin_path="/etc/systemd/system/$app.service"
-systemctl enable $app.service
+
+systemctl enable --quiet wireguard.path
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
-ynh_script_progression --message="Integrating service in YunoHost..." --time --weight=1
+ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add $app --description "WireGuard UI" --log "/var/log/$app/$app.log"
+yunohost service add wireguard --description "WireGuard" --needs_exposed_ports $port_wg --test_status "wg show | grep wg0"
+yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/ui.log"
 
 #=================================================
 # RESTORE VARIOUS FILES
@@ -108,9 +130,10 @@ ynh_restore_file --origin_path=$(jq -r ".config_file_path" $final_path/db/server
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --time --weight=1
+ynh_script_progression --message="Starting a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
+sleep 5
 
 #=================================================
 # RESTORE THE LOGROTATE CONFIGURATION
@@ -123,7 +146,7 @@ ynh_restore_file --origin_path="/etc/logrotate.d/$app"
 #=================================================
 # RELOAD NGINX AND PHP-FPM
 #=================================================
-ynh_script_progression --message="Reloading nginx web server and php-fpm..." --time --weight=1
+ynh_script_progression --message="Reloading nginx web server and php-fpm..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 
@@ -131,4 +154,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Restoration completed for $app" --time --last
+ynh_script_progression --message="Restoration completed for $app" --last
