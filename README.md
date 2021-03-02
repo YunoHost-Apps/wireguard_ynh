@@ -25,8 +25,19 @@ This app installs WireGuard, a software to create and manage virtual private net
 
 WireGuard can be configured via a non-official web UI. Avoid altering the configuration files via the command line interface, though.
 
-If you want to use the server as an endpoint for your clients' Internet connection, add the following commands in `WireGuard Server` menu.
-Replace `eth0` with the interface connected to the Internet.
+### Make your server share its Internet connection
+
+#### Enable port forwarding
+
+```bash
+sudo nano /etc/sysctl.conf
+# It should have an uncommented line:
+net.ipv4.ip_forward = 1
+# Save and quit (CTRL+O, CTRL+X)
+sudo sysctl -p
+```
+
+Add the following commands in `WireGuard Server` menu. Replace `eth0` with the interface connected to the Internet:
 
 #### Post Up Script
 ```
