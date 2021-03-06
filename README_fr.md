@@ -25,8 +25,19 @@ Cette application installe WireGuard, logiciel permettant de créer des réseaux
 
 WireGuard est configurable via une web UI non-officielle. Évitez de toucher aux fichiers de configuration via la ligne de commande.
 
-Si vous souhaitez utiliser votre serveur comme point d'accès pour la connexion Internet de vos clients, ajoutez les commandes suivantes dans le menu `WireGuard Server`.
-Remplacez `eth0` par l'interface connectée à l'Internet.
+### Partager la connexion Internet de votre serveur
+
+#### Activer le *port forwarding*
+
+```bash
+sudo nano /etc/sysctl.conf
+# It should have an uncommented line:
+net.ipv4.ip_forward = 1
+# Save and quit (CTRL+O, CTRL+X)
+sudo sysctl -p
+```
+
+Ajoutez les commandes suivantes dans le menu `WireGuard Server`. Remplacez `eth0` par l'interface connectée à l'Internet.
 
 #### Post Up Script
 ```
