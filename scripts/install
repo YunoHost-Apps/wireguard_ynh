@@ -62,7 +62,7 @@ port_wg=$(ynh_find_port --port=8095)
 ynh_app_setting_set --app=$app --key=port_wg --value=$port_wg
 
 # Find an available port for WireGuard UI
-port=$(ynh_find_port --port=8096)
+port=$(ynh_find_port --port=$(($port_wg+1)))
 ynh_app_setting_set --app=$app --key=port --value=$port
 
 # Open the WireGuard port
