@@ -5,7 +5,7 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="linux-headers-$(uname --kernel-release) wireguard-dkms wireguard"
+pkg_dependencies="wireguard-dkms wireguard"
 
 #=================================================
 # PERSONAL HELPERS
