@@ -137,7 +137,7 @@ ynh_script_progression --message="Upgrading dependencies..." --weight=7
 #TODO: remove buster-backports kernel
 
 # Add buster-backports gpg key
-ynh_install_repo_gpg --key="https://ftp.debian.org/debian/dists/buster-backports/Release.gpg" --name="$app"
+ynh_install_repo_gpg --key="https://ftp-master.debian.org/keys/archive-key-10.asc" --name="$app"
 
 # Add buster-backports repo
 ynh_add_repo --uri="http://deb.debian.org/debian" --suite="buster-backports" --component="main" --name="$app"
