@@ -84,6 +84,13 @@ if [ -f "/etc/sudoers.d/${app}_ynh" ]; then
 	ynh_replace_string "__USER__" "${app}" /etc/sudoers.d/${app}_ynh
 fi
 
+# Remove deprecated services
+if systemctl list-units --full -all | grep -Fq "wireguard.path"; then
+	systemctl disable --now --quiet wireguard.path
+	ynh_secure_remove --file="/etc/systemd/system/wireguard.path"
+fi
+ynh_remove_systemd_config --service="wireguard.service"
+
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
@@ -106,8 +113,7 @@ ynh_abort_if_errors
 ynh_script_progression --message="Stopping a systemd service..." --weight=1
 
 ynh_systemd_action --service_name=wireguard_ui --action="stop" --line_match="Stopped WireGuard UI" --log_path="systemd" --timeout=30
-systemctl disable --now --quiet wireguard.path
-ynh_systemd_action --service_name=wireguard --action="stop"
+ynh_systemd_action --service_name=wg-quick@wg0 --action="stop" --line_match="Stopped WireGuard via wg-quick(8) for wg0." --log_path="systemd" --timeout=30
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -170,11 +176,8 @@ ynh_script_progression --message="Upgrading systemd configuration..." --weight=1
 ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service --others_var="port"
 
 # Create a dedicated systemd config for monitoring WireGuard's configuration
-cp ../conf/wireguard.path /etc/systemd/system/wireguard.path
-systemctl enable --quiet wireguard.path
-
-# Create a dedicated systemd config for restarting WireGuard
-ynh_add_systemd_config --service=wireguard --template=wireguard.service --others_var="port_wg"
+cp ../conf/wireguard_ui_conf.path /etc/systemd/system/wireguard_ui_conf.path
+systemctl enable --quiet wireguard_ui_conf.path
 
 #=================================================
 # CONFIGURING WIREGUARD
@@ -199,20 +202,12 @@ chown -R $app: $final_path/db
 chmod -R 750 $final_path/db
 
 #=================================================
-# SETUP LOGROTATE
-#=================================================
-ynh_script_progression --message="Upgrading logrotate configuration..." --weight=1
-
-# Use logrotate to manage app-specific logfile(s)
-ynh_use_logrotate --non-append
-
-#=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add wireguard --description "WireGuard" --needs_exposed_ports "$port_wg" --test_status "wg show | grep wg0"
-yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/ui.log"
+yunohost service add wg-quick@wg0 --description "WireGuard" --needs_exposed_ports "$port_wg"
+yunohost service add wireguard_ui --description "WireGuard UI"
 
 #=================================================
 # START SYSTEMD SERVICE
@@ -222,6 +217,7 @@ ynh_script_progression --message="Starting a systemd service..." --weight=1
 # Start a systemd service
 ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
 sleep 5
+ynh_systemd_action --service_name=wg-quick@wg0 --action="start" --line_match="Started WireGuard via wg-quick(8) for wg0." --log_path="systemd" --timeout=30
 
 #=================================================
 # RELOAD NGINX

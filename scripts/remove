@@ -27,11 +27,18 @@ final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 # REMOVE SERVICE INTEGRATION IN YUNOHOST
 #=================================================
 
-# Remove the service from the list of services known by Yunohost (added from `yunohost service add`)
+# Remove the services from the list of services known by Yunohost (added from `yunohost service add`)
+
 if ynh_exec_warn_less yunohost service status wireguard_ui >/dev/null
 then
 	ynh_script_progression --message="Removing WireGuard UI service integration..." --weight=1
 	yunohost service remove wireguard_ui
+fi
+
+if ynh_exec_warn_less yunohost service status wg-quick@wg0 >/dev/null
+then
+	ynh_script_progression --message="Removing WireGuard service integration..." --weight=1
+	yunohost service remove wg-quick@wg0
 fi
 
 #=================================================
@@ -40,13 +47,13 @@ fi
 ynh_script_progression --message="Stopping and removing the systemd service..." --weight=1
 
 # YunoHost does not handle services not ending with .service, let's remove it manually
-systemctl stop wireguard.path
-systemctl disable wireguard.path --quiet
-ynh_secure_remove --file="/etc/systemd/system/wireguard.path"
+systemctl stop wireguard_ui_conf.path
+systemctl disable wireguard_ui_conf.path --quiet
+ynh_secure_remove --file="/etc/systemd/system/wireguard_ui_conf.path"
 systemctl daemon-reload
 
 # Remove the dedicated systemd configs
-ynh_remove_systemd_config --service=wireguard
+ynh_remove_systemd_config --service=wireguard_ui_conf
 ynh_remove_systemd_config --service=wireguard_ui
 
 #=================================================
