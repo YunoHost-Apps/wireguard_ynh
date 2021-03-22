@@ -202,4 +202,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression --message="Installation of $app completed. You may need to reboot your server before being able to start the WireGuard service." --last
