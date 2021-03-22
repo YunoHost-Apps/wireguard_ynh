@@ -137,7 +137,6 @@ ynh_script_progression --message="Starting a systemd service..." --weight=1
 
 ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
 sleep 5
-ynh_systemd_action --service_name=wg-quick@wg0 --action="start" --line_match="Started WireGuard via wg-quick(8) for wg0." --log_path="systemd" --timeout=30
 
 #=================================================
 # GENERIC FINALIZATION
@@ -152,4 +151,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Restoration completed for $app" --last
+ynh_script_progression --message="Restoration completed for $app. You may need to reboot your server before being able to start the WireGuard service." --last
