@@ -114,7 +114,9 @@ ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui.service
 ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui_conf.path
 ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui_conf.service
 
+systemctl enable --quiet wireguard_ui.service
 systemctl enable --quiet wireguard_ui_conf.path
+systemctl enable --quiet wireguard_ui_conf.service
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
