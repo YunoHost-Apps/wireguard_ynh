@@ -25,7 +25,7 @@ ynh_abort_if_errors
 #=================================================
 
 domain=$YNH_APP_ARG_DOMAIN
-path_url=$YNH_APP_ARG_PATH #TODO: Check if possible with wireguard_ui to use sub path
+path_url="/"
 admin=$YNH_APP_ARG_ADMIN
 
 app=$YNH_APP_INSTANCE_NAME
@@ -62,7 +62,7 @@ port_wg=$(ynh_find_port --port=8095)
 ynh_app_setting_set --app=$app --key=port_wg --value=$port_wg
 
 # Find an available port for WireGuard UI
-port=$(ynh_find_port --port=8096)
+port=$(ynh_find_port --port=$(($port_wg+1)))
 ynh_app_setting_set --app=$app --key=port --value=$port
 
 # Open the WireGuard port
@@ -72,6 +72,9 @@ ynh_exec_warn_less yunohost firewall allow --no-upnp UDP $port_wg
 # INSTALL DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=7
+
+# Add buster-backports gpg key
+ynh_install_repo_gpg --key="https://ftp-master.debian.org/keys/archive-key-10.asc" --name="$app"
 
 # Add buster-backports repo
 ynh_add_repo --uri="http://deb.debian.org/debian" --suite="buster-backports" --component="main" --name="$app"
@@ -132,7 +135,7 @@ ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --ta
 # Create WireGuard configuration directory
 mkdir -p /etc/wireguard
 
-# Add interace configuration file for WireGuard
+# Add interface configuration file for WireGuard
 cp ../conf/wg0.conf /etc/wireguard/wg0.conf
 ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --target_file="/etc/wireguard/wg0.conf"
 ynh_replace_string --match_string="__PRIVATE_KEY__" --replace_string="$(wg genkey)" --target_file="/etc/wireguard/wg0.conf"
@@ -146,11 +149,11 @@ ynh_script_progression --message="Configuring a systemd service..." --weight=1
 ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service --others_var="port"
 
 # Create a dedicated systemd config for monitoring WireGuard's configuration
-cp ../conf/wireguard.path /etc/systemd/system/wireguard.path
-systemctl enable --quiet wireguard.path
+cp ../conf/wireguard_ui_conf.path /etc/systemd/system/wireguard_ui_conf.path
+systemctl enable --quiet wireguard_ui_conf.path
 
-# Create a dedicated systemd config for restarting WireGuard
-ynh_add_systemd_config --service=wireguard --template=wireguard.service --others_var="port_wg"
+# Create a dedicated systemd config for restarting WireGuard when its configuration changes
+ynh_add_systemd_config --service=wireguard_ui_conf --template=wireguard_ui_conf.service --others_var="port_wg"
 
 #=================================================
 # GENERIC FINALIZATION
@@ -166,20 +169,12 @@ chmod -R 750 $final_path/db
 chown -R $app:$app /etc/wireguard
 
 #=================================================
-# SETUP LOGROTATE
-#=================================================
-ynh_script_progression --message="Configuring log rotation..." --weight=1
-
-# Use logrotate to manage application logfile(s)
-ynh_use_logrotate
-
-#=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add wireguard --description "WireGuard" --needs_exposed_ports $port_wg --test_status "wg show | grep wg0"
-yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/ui.log"
+yunohost service add wg-quick@wg0 --description "WireGuard VPN" --needs_exposed_ports $port_wg --test_status "wg show | grep wg0"
+yunohost service add wireguard_ui --description "WireGuard UI"
 
 #=================================================
 # START SYSTEMD SERVICE
@@ -207,4 +202,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression --message="Installation of $app completed. You may need to reboot your server before being able to start the WireGuard service." --last

@@ -31,8 +31,9 @@ WireGuard can be configured via a non-official web UI. Avoid altering the config
 
 ```bash
 sudo nano /etc/sysctl.conf
-# It should have an uncommented line:
+# Uncomment the following lines:
 net.ipv4.ip_forward = 1
+net.ipv6.conf.all.forwarding = 1
 # Save and quit (CTRL+O, CTRL+X)
 sudo sysctl -p
 ```

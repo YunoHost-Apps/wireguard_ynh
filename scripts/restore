@@ -88,6 +88,9 @@ ynh_script_progression --message="Reinstalling dependencies..." --weight=5
 
 # Define and install dependencies
 
+# Add buster-backports gpg key
+ynh_install_repo_gpg --key="https://ftp-master.debian.org/keys/archive-key-10.asc" --name="$app"
+
 #Add buster-backports repo
 ynh_add_repo --uri="http://deb.debian.org/debian" --suite="buster-backports" --component="main" --name="$app"
 
@@ -108,18 +111,20 @@ ynh_remove_extra_repo --name=$app
 ynh_script_progression --message="Restoring the systemd configuration..." --weight=1
 
 ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui.service
-ynh_restore_file --origin_path=/etc/systemd/system/wireguard.path
-ynh_restore_file --origin_path="/etc/systemd/system/$app.service"
+ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui_conf.path
+ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui_conf.service
 
-systemctl enable --quiet wireguard.path
+systemctl enable --quiet wireguard_ui.service
+systemctl enable --quiet wireguard_ui_conf.path
+systemctl enable --quiet wireguard_ui_conf.service
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add wireguard --description "WireGuard" --needs_exposed_ports $port_wg --test_status "wg show | grep wg0"
-yunohost service add wireguard_ui --description "WireGuard UI" --log "/var/log/$app/ui.log"
+yunohost service add wg-quick@wg0 --description "WireGuard VPN" --needs_exposed_ports "$port_wg" --test_status "wg show | grep wg0"
+yunohost service add wireguard_ui --description "WireGuard UI"
 
 #=================================================
 # RESTORE VARIOUS FILES
@@ -136,12 +141,6 @@ ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="ht
 sleep 5
 
 #=================================================
-# RESTORE THE LOGROTATE CONFIGURATION
-#=================================================
-
-ynh_restore_file --origin_path="/etc/logrotate.d/$app"
-
-#=================================================
 # GENERIC FINALIZATION
 #=================================================
 # RELOAD NGINX AND PHP-FPM
@@ -154,4 +153,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Restoration completed for $app" --last
+ynh_script_progression --message="Restoration completed for $app. You may need to reboot your server before being able to start the WireGuard service." --last
