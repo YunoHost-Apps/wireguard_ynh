@@ -173,11 +173,14 @@ ynh_system_user_create --username=$app
 ynh_script_progression --message="Upgrading systemd configuration..." --weight=1
 
 # Create a dedicated systemd config for the web UI
-ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service --others_var="port"
+ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service
 
 # Create a dedicated systemd config for monitoring WireGuard's configuration
 cp ../conf/wireguard_ui_conf.path /etc/systemd/system/wireguard_ui_conf.path
 systemctl enable --quiet wireguard_ui_conf.path
+
+# Create a dedicated systemd config for restarting WireGuard when its configuration changes
+ynh_add_systemd_config --service=wireguard_ui_conf --template=wireguard_ui_conf.service
 
 #=================================================
 # CONFIGURING WIREGUARD
