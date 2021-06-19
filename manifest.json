@@ -3,11 +3,16 @@
     "id": "wireguard",
     "packaging_format": 1,
     "description": {
-        "en": "Virtual Private Networks (VPN) via WireGuard, with a web UI",
-        "fr": "Réseaux Privés Virtuels (VPN) via WireGuard, avec une web UI"
+        "en": "Virtual Private Networks (VPN) via WireGuard, with a web UI to ease configuration",
+        "fr": "Réseaux Privés Virtuels (VPN) via WireGuard, avec une web UI pour faciliter sa configuration"
     },
-    "version": "0.2.7~ynh3",
+    "version": "0.2.7~ynh4",
     "url": "https://github.com/ngoduykhanh/wireguard-ui",
+    "upstream": {
+        "license": "MIT",
+        "website": "https://www.wireguard.com/",
+        "code": "https://github.com/ngoduykhanh/wireguard-ui"
+    },
     "license": "MIT",
     "maintainer": {
         "name": "tituspijean",

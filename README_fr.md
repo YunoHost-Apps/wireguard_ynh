@@ -3,41 +3,48 @@
 [![Niveau d'intégration](https://dash.yunohost.org/integration/wireguard.svg)](https://dash.yunohost.org/appci/app/wireguard) ![](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)  
 [![Installer WireGuard avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 
-*[Read this readme in english.](./README.md)* 
+*[Read this readme in english.](./README.md)*
+*[Lire ce readme en français.](./README_fr.md)*
 
-:warning: Cette app est encore expérimentale. Vérifiez sa compatibilté avant de lancer l'installation sur un serveur de production. :warning:
-
-:exclamation: WireGuard pour YunoHost ajoutera un module DKMS à votre noyau Linux.
-
-> *Ce package vous permet d'installer WireGuard rapidement et simplement sur un serveur YunoHost.  
-Si vous n'avez pas YunoHost, consultez [le guide](https://yunohost.org/#/install) pour apprendre comment l'installer.*
+> *Ce package vous permet d'installer WireGuard rapidement et simplement sur un serveur YunoHost.
+Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
 
 ## Vue d'ensemble
-Cette application installe WireGuard, logiciel permettant de créer des réseaux privés virtuels (VPN), accompagné de WireGuard UI pour éviter de les configurer par la ligne de commande.
 
-**Version de la web UI incluse :** 0.2.7
+Réseaux Privés Virtuels (VPN) via WireGuard, avec une web UI pour faciliter sa configuration
 
-## Capture d'écran
+**Version incluse :** 0.2.7~ynh4
 
-![](https://user-images.githubusercontent.com/6447444/80270680-76adf980-86e4-11ea-8ca1-9237f0dfa249.png)
 
-## Configuration
 
-WireGuard est configurable via une web UI non-officielle. Évitez de toucher aux fichiers de configuration via la ligne de commande.
+## Captures d'écran
 
-### Partager la connexion Internet de votre serveur
+![](./doc/screenshots/screenshot.png)
+![](./doc/screenshots/screenshot.png:Zone.Identifier)
 
-#### Activer le *port forwarding*
+## Avertissements / informations importantes
+
+* Cette application ajoutera un module DMKS à votre noyau Linux.
+  * Vous devriez redémarrer votre serveur pour que WireGuard puisse se lancer.
+* Cette application inclut WireGuard et une interface web non-officielle pour le configurer.
+  * Évitez de modifier les fichiers de configuration via la ligne de commande.
+* Utiliser le panneau de permissions de YunoHost pour autoriser des utilisateurs à accéder à WireGuard UI.
+* Une seule interface réseau, *wg0*, peut actuellement être gérée par cette app.
+
+### Partagez votre connexion Internet via WireGuard
+
+#### Activez le *port forwarding*
 
 ```bash
 sudo nano /etc/sysctl.conf
-# It should have an uncommented line:
+# Décommentez les lignes suivantes :
 net.ipv4.ip_forward = 1
-# Save and quit (CTRL+O, CTRL+X)
+net.ipv6.conf.all.forwarding = 1
+# Sauvegardez et quittez (CTRL+O, CTRL+X)
 sudo sysctl -p
 ```
 
-Ajoutez les commandes suivantes dans le menu `WireGuard Server`. Remplacez `eth0` par l'interface connectée à l'Internet.
+Ajoutez les commandes suivantes dans le menu `WireGuard Server`. Remplacez `eth0` avec l'interface connectée à Internet :
 
 #### Post Up Script
 ```
@@ -49,42 +56,16 @@ iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptabl
 iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
 ```
 
-## Documentation
 
- * Documentation officielle : https://www.wireguard.com/quickstart/
-<!-- * Documentation YunoHost : -->
+## Documentations et ressources
 
-## Caractéristiques spécifiques YunoHost
+* Site officiel de l'app : https://www.wireguard.com/
+* Dépôt de code officiel de l'app : https://github.com/ngoduykhanh/wireguard-ui
+* Documentation YunoHost pour cette app : https://yunohost.org/app_wireguard
+* Signaler un bug : https://github.com/YunoHost-Apps/wireguard_ynh/issues
 
-#### Support multi-utilisateur
+## Informations pour les développeurs
 
-* L'authentification LDAP et HTTP est-elle prise en charge ? Non, utilisez le système de permissions de YunoHost pour permettre à vos utilisateurs d'utiliser la web UI.
-* L'application peut-elle être utilisée par plusieurs utilisateurs ? Oui, mais tout utilisateur aura la main sur la configuration du VPN et les identifiants de ses clients.
-
-#### Architectures supportées
-
-* x86-64 - [![Build Status](https://ci-apps.yunohost.org/ci/logs/wireguard%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/wireguard/)
-* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/wireguard%20%28Apps%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/wireguard/)
-
-## Limitations
-
-* :construction: La web UI ne peut être installée qu'à la racine d'un domaine.
-* :construction: Seulement une seule interface réseau, *wg0*, peut être gérée par l'application.
-
-## Liens
-
- * Signaler un bug : https://github.com/YunoHost-Apps/wireguard_ynh/issues
- * Site de l'application : https://www.wireguard.com
- * Dépôt de l'application principale : https://www.wireguard.com/repositories
- * Dépôt de la web UI : https://github.com/ngoduykhanh/wireguard-ui
- * Site web YunoHost : https://yunohost.org/
-
----
-
-Informations pour les développeurs
-----------------
-
-**Seulement si vous voulez utiliser une branche de test pour le codage, au lieu de fusionner directement dans la banche principale.**
 Merci de faire vos pull request sur la [branche testing](https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing).
 
 Pour essayer la branche testing, procédez comme suit.
@@ -93,3 +74,5 @@ sudo yunohost app install https://github.com/YunoHost-Apps/wireguard_ynh/tree/te
 ou
 sudo yunohost app upgrade wireguard -u https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
 ```
+
+**Plus d'infos sur le packaging d'applications :** https://yunohost.org/packaging_apps
