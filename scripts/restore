@@ -58,6 +58,7 @@ ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 ynh_script_progression --message="Restoring the app main directory..." --weight=1
 
 ynh_restore_file --origin_path="$final_path"
+ynh_restore_file --origin_path="/etc/wireguard"
 
 #=================================================
 # RECREATE THE DEDICATED USER
