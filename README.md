@@ -17,7 +17,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 Virtual Private Networks (VPN) via WireGuard, with a web UI to ease configuration
 
-**Shipped version:** 0.2.7~ynh6
+**Shipped version:** 0.2.7~ynh7
 
 
 

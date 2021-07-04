@@ -199,10 +199,14 @@ ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --ta
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-# Set permissions on app files
-chown -R root: $final_path
-chown -R $app: $final_path/db
-chmod -R 750 $final_path/db
+# Set permissions to app files
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chown -R $app: "$final_path"
+
+chmod 750 /etc/wireguard
+chmod -R o-rwx /etc/wireguard
+chown -R $app: /etc/wireguard
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST

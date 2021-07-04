@@ -5,7 +5,14 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="linux-headers-$(uname -r) wireguard-dkms wireguard"
+if grep "Raspberry Pi" /proc/device-tree/model; then
+    pkg_headers="raspberrypi-kernel-headers"
+else
+    pkg_headers="linux-headers-$(uname -r)"
+fi
+
+# dependencies used by the app
+pkg_dependencies="$pkg_headers wireguard-dkms wireguard"
 
 #=================================================
 # PERSONAL HELPERS
