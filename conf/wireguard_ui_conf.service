@@ -6,4 +6,4 @@ After=network.target
 Type=oneshot
 User=__APP__
 Group=__APP__
-ExecStart=/usr/bin/systemctl restart wg-quick@wg0.service
+ExecStart=sudo /usr/bin/systemctl restart wg-quick@wg0.service
