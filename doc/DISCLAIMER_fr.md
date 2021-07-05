@@ -18,7 +18,7 @@ net.ipv6.conf.all.forwarding = 1
 sudo sysctl -p
 ```
 
-Ajoutez les commandes suivantes dans le menu `WireGuard Server`. Remplacez `eth0` avec l'interface connectée à Internet :
+Ajoutez les commandes suivantes dans le menu `WireGuard Server`, tel que dans [cette image](https://user-images.githubusercontent.com/8769166/124400150-cf354980-dd20-11eb-87c6-9478938d9c82.png). Remplacez `eth0` avec l'interface connectée à Internet :
 
 #### Post Up Script
 ```
