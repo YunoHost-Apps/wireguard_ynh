@@ -55,7 +55,7 @@ ynh_app_setting_set --app=$app --key=admin --value=$admin
 #=================================================
 # FIND AND OPEN A PORT
 #=================================================
-ynh_script_progression --message="Configuring firewall..." --weight=1
+ynh_script_progression --message="Finding an available port..." --weight=1
 
 # Find an available port for WireGuard
 port_wg=$(ynh_find_port --port=8095)
@@ -66,6 +66,7 @@ port=$(ynh_find_port --port=$(($port_wg+1)))
 ynh_app_setting_set --app=$app --key=port --value=$port
 
 # Open the WireGuard port
+ynh_script_progression --message="Configuring firewall..." --weight=1
 ynh_exec_warn_less yunohost firewall allow --no-upnp UDP $port_wg
 
 #=================================================
@@ -102,7 +103,7 @@ ynh_setup_source --dest_dir="$final_path" --source_id="$(ynh_detect_arch)"
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring nginx web server..." --weight=1
+ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
@@ -175,8 +176,8 @@ chown -R $app: /etc/wireguard
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add wg-quick@wg0 --description "WireGuard VPN" --needs_exposed_ports $port_wg --test_status "wg show | grep wg0"
-yunohost service add wireguard_ui --description "WireGuard UI"
+yunohost service add wg-quick@wg0 --description="WireGuard VPN" --needs_exposed_ports="$port_wg" --test_status="wg show | grep wg0"
+yunohost service add wireguard_ui --description="WireGuard UI"
 
 #=================================================
 # START SYSTEMD SERVICE
@@ -191,7 +192,7 @@ ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="ht
 #=================================================
 ynh_script_progression --message="Configuring permissions..." --weight=1
 
-ynh_permission_update --permission "main" --remove "all_users" --add "$admin"
+ynh_permission_update --permission="main" --remove="all_users" --add="$admin"
 
 #=================================================
 # RELOAD NGINX
