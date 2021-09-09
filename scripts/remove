@@ -78,7 +78,7 @@ ynh_secure_remove --file="/etc/wireguard"
 #=================================================
 # REMOVE NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Removing nginx web server configuration..." --weight=1
+ynh_script_progression --message="Removing NGINX web server configuration..." --weight=1
 
 # Remove the dedicated nginx config
 ynh_remove_nginx_config
@@ -99,12 +99,6 @@ if yunohost firewall list | grep -q "\- $port_wg$"
 then
 	ynh_script_progression --message="Closing port $port_wg..." --weight=1
 	ynh_exec_warn_less yunohost firewall disallow UDP $port_wg
-fi
-
-if yunohost firewall list | grep -q "\- $port$"
-then
-        ynh_script_progression --message="Closing port $port..." --weight=1
-        ynh_exec_warn_less yunohost firewall disallow TCP $port
 fi
 
 #=================================================
