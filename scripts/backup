@@ -66,6 +66,9 @@ ynh_backup --src_path="/etc/sudoers.d/${app}_ynh"
 # Backup the wireguard interface config
 ynh_backup --src_path="/etc/wireguard"
 
+# Backing up specific config file, in case of it is not in /etc/wireguard
+ynh_backup --src_path="$(jq -r ".config_file_path" $final_path/db/server/global_settings.json)" --not_mandatory
+
 #=================================================
 # END OF SCRIPT
 #=================================================
