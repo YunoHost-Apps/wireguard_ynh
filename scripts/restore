@@ -126,8 +126,8 @@ systemctl enable --quiet wireguard_ui_conf.service
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add wg-quick@wg0 --description "WireGuard VPN" --needs_exposed_ports "$port_wg" --test_status "wg show | grep wg0"
-yunohost service add wireguard_ui --description "WireGuard UI"
+yunohost service add wg-quick@wg0 --description="WireGuard VPN" --needs_exposed_ports="$port_wg" --test_status="wg show | grep wg0"
+yunohost service add wireguard_ui --description="WireGuard UI"
 
 #=================================================
 # RESTORE VARIOUS FILES
