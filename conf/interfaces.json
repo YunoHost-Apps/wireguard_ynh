@@ -4,6 +4,6 @@
                 "fd42::/112"
         ],
         "listen_port": "__PORT_WG__",
-        "post_up": "",
-        "post_down": ""
+        "post_up": "iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o __INTERFACE__ -j MASQUERADE; ip6tables -A FORWARD -i %i -j ACCEPT; ip6tables -A FORWARD -o %i -j ACCEPT; ip6tables -t nat -A POSTROUTING -o __INTERFACE__ -j MASQUERADE; ip link set multicast on dev %i",
+        "post_down": "iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o __INTERFACE__ -j MASQUERADE; ip6tables -D FORWARD -i %i -j ACCEPT; ip6tables -D FORWARD -o %i -j ACCEPT; ip6tables -t nat -D POSTROUTING -o __INTERFACE__ -j MASQUERADE"
 }
