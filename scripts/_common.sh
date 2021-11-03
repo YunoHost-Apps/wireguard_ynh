@@ -5,59 +5,11 @@
 #=================================================
 
 # dependencies used by the app
-if grep "Raspberry Pi" /proc/device-tree/model; then
-    pkg_headers="raspberrypi-kernel-headers"
-else
-    pkg_headers="linux-headers-$(uname -r)"
-fi
-
-# dependencies used by the app
-pkg_dependencies="$pkg_headers wireguard-dkms wireguard"
+pkg_dependencies="wireguard"
 
 #=================================================
 # PERSONAL HELPERS
 #=================================================
-
-# Add gpg keys for repositories
-#
-# [internal]
-#
-# usage: ynh_install_repo_gpg --key=key_url --name=name [--append]
-# | arg: -k, --key=         - url to get the public key.
-# | arg: -n, --name=        - Name for the files for this repo, $app as default value.
-# | arg: -a, --append       - Do not overwrite existing files.
-#
-# Requires YunoHost version 3.8.1 or higher.
-ynh_install_repo_gpg () {
-    # Declare an array to define the options of this helper.
-    local legacy_args=kna
-    local -A args_array=( [k]=key= [n]=name= [a]=append )
-    local key
-    local name
-    local append
-    # Manage arguments with getopts
-    ynh_handle_getopts_args "$@"
-    name="${name:-$app}"
-    append=${append:-0}
-    key=${key:-}
-
-    if [ $append -eq 1 ]
-    then
-        append="--append"
-        wget_append="tee --append"
-    else
-        append=""
-        wget_append="tee"
-    fi
-
-    # Get the public key for the repo
-    if [ -n "$key" ]
-    then
-        mkdir --parents "/etc/apt/trusted.gpg.d"
-        # Timeout option is here to enforce the timeout on dns query and tcp connect (c.f. man wget)
-        wget --timeout 900 --quiet "$key" --output-document=- | gpg --dearmor | $wget_append /etc/apt/trusted.gpg.d/$name.gpg > /dev/null
-    fi
-}
 
 #=================================================
 # EXPERIMENTAL HELPERS

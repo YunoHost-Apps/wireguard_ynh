@@ -89,24 +89,7 @@ chown -R $app: /etc/wireguard
 #=================================================
 ynh_script_progression --message="Reinstalling dependencies..." --weight=5
 
-# Define and install dependencies
-
-# Add buster-backports gpg key
-ynh_install_repo_gpg --key="https://ftp-master.debian.org/keys/archive-key-10.asc" --name="$app"
-
-# Add buster-backports repo
-ynh_add_repo --uri="http://deb.debian.org/debian" --suite="buster-backports" --component="main" --name="$app"
-
-# Add pin-priority for wireguard packages
-ynh_pin_repo --package="wireguard*" --pin="origin deb http://deb.debian.org/debian buster-backports main" --priority=995 --name="$app"
-
-# Update the list of package with the new repo
-ynh_package_update
-
-ynh_add_app_dependencies --package="$pkg_dependencies"
-
-#Remove buster-backports repo and pin-priority
-ynh_remove_extra_repo --name=$app
+ynh_install_app_dependencies "$pkg_dependencies"
 
 #=================================================
 # RESTORE SYSTEMD

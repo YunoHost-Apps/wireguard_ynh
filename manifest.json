@@ -19,7 +19,7 @@
         "email": "tituspijean@outlook.com"
     },
     "requirements": {
-        "yunohost": ">= 4.2"
+        "yunohost": ">= 4.2.8"
     },
     "multi_instance": false,
     "services": [
@@ -27,14 +27,6 @@
     ],
     "arguments": {
         "install" : [
-            {
-                "name": "warning",
-                "type": "display_text",
-                "ask": {
-                    "en": "WireGuard installs a Linux kernel module and will most likely require a reboot of your server to work properly.",
-                    "fr": "WireGuard installe un module au noyau Linux et nécessite probablement un redémarrage du serveur pour fonctionner correctement."
-                }
-            },
             {
                 "name": "domain",
                 "type": "domain",
