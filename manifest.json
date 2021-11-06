@@ -19,7 +19,7 @@
         "email": "tituspijean@outlook.com"
     },
     "requirements": {
-        "yunohost": ">= 4.2"
+        "yunohost": ">= 4.2.8"
     },
     "multi_instance": false,
     "services": [
@@ -37,17 +37,11 @@
             },
             {
                 "name": "domain",
-                "type": "domain",
-                "example": "wg.example.com",
-                "help": {
-                    "en": "The web UI requires its own dedicated domain.",
-                    "fr": "L'interface web nécessite son propre domaine."
-                }
+                "type": "domain"
             },
             {
                 "name": "admin",
-                "type": "user",
-                "example": "johndoe"
+                "type": "user"
             }
         ]
     }
