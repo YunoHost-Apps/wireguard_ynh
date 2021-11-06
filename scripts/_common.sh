@@ -4,11 +4,16 @@
 # COMMON VARIABLES
 #=================================================
 
-# dependencies used by the app
-if grep "Raspberry Pi" /proc/device-tree/model; then
-    pkg_headers="raspberrypi-kernel-headers"
+# WireGuard was integrated in Linux kernel 5.6
+# Before that, we need Linux Headers
+if dpkg --compare-versions $(uname -r) lt 5.6; then
+    if grep "Raspberry Pi" /proc/device-tree/model; then
+        pkg_headers="raspberrypi-kernel-headers"
+    else
+        pkg_headers="linux-headers-$(uname -r)"
+    fi
 else
-    pkg_headers="linux-headers-$(uname -r)"
+    pkg_headers=""
 fi
 
 # dependencies used by the app
