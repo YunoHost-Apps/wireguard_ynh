@@ -3,8 +3,8 @@
     "id": "wireguard",
     "packaging_format": 1,
     "description": {
-        "en": "Virtual Private Networks (VPN) via WireGuard, with a web UI to ease configuration",
-        "fr": "Réseaux Privés Virtuels (VPN) via WireGuard, avec une web UI pour faciliter sa configuration"
+        "en": "Web user interface to manage your WireGuard setup",
+        "fr": "Interface utilisateur Web pour gérer votre configuration WireGuard"
     },
     "version": "0.3.2~ynh1",
     "url": "https://github.com/ngoduykhanh/wireguard-ui",
@@ -19,7 +19,7 @@
         "email": "tituspijean@outlook.com"
     },
     "requirements": {
-        "yunohost": ">= 4.2.8"
+        "yunohost": ">= 4.3.0"
     },
     "multi_instance": false,
     "services": [
