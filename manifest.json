@@ -3,10 +3,10 @@
     "id": "wireguard",
     "packaging_format": 1,
     "description": {
-        "en": "Virtual Private Networks (VPN) via WireGuard, with a web UI to ease configuration",
-        "fr": "Réseaux Privés Virtuels (VPN) via WireGuard, avec une web UI pour faciliter sa configuration"
+        "en": "Web user interface to manage your WireGuard setup",
+        "fr": "Interface utilisateur Web pour gérer votre configuration WireGuard"
     },
-    "version": "0.2.7~ynh8",
+    "version": "0.3.2~ynh1",
     "url": "https://github.com/ngoduykhanh/wireguard-ui",
     "upstream": {
         "license": "MIT",
@@ -19,7 +19,7 @@
         "email": "tituspijean@outlook.com"
     },
     "requirements": {
-        "yunohost": ">= 4.2"
+        "yunohost": ">= 4.3.0"
     },
     "multi_instance": false,
     "services": [
@@ -37,17 +37,11 @@
             },
             {
                 "name": "domain",
-                "type": "domain",
-                "example": "wg.example.com",
-                "help": {
-                    "en": "The web UI requires its own dedicated domain.",
-                    "fr": "L'interface web nécessite son propre domaine."
-                }
+                "type": "domain"
             },
             {
                 "name": "admin",
-                "type": "user",
-                "example": "johndoe"
+                "type": "user"
             }
         ]
     }

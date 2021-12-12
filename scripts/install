@@ -27,6 +27,7 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 path_url="/"
 admin=$YNH_APP_ARG_ADMIN
+architecture=$YNH_ARCH
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -98,7 +99,7 @@ ynh_script_progression --message="Setting up source files..." --weight=1
 
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source --dest_dir="$final_path" --source_id="$(ynh_detect_arch)"
+ynh_setup_source --dest_dir="$final_path" --source_id="$architecture"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -198,7 +199,7 @@ ynh_permission_update --permission="main" --remove="all_users" --add="$admin"
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..." --weight=1
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 

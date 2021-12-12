@@ -11,9 +11,9 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 ## Vue d'ensemble
 
-Réseaux Privés Virtuels (VPN) via WireGuard, avec une web UI pour faciliter sa configuration
+WireGuard® is fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec. It intends to be considerably more performant than OpenVPN. WireGuard is designed as a general purpose VPN.
 
-**Version incluse :** 0.2.7~ynh8
+**Version incluse :** 0.3.2~ynh1
 
 
 
