@@ -92,10 +92,9 @@ Now wireguard_ynh use a DKMS module allowing itself to be used with the stable k
 	fi
 fi
 
-# Add sudoers file if missing
+# Drop sudoers file if present
 if [ -f "/etc/sudoers.d/${app}_ynh" ]; then
-	install -b -o root -g root -m 0440 ../conf/sudoers.conf /etc/sudoers.d/${app}_ynh
-	ynh_replace_string "__USER__" "${app}" /etc/sudoers.d/${app}_ynh
+	ynh_secure_remove /etc/sudoers.d/${app}_ynh
 fi
 
 # Remove deprecated services
