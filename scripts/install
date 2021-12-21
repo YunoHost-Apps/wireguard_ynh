@@ -178,12 +178,20 @@ yunohost service add wg-quick@wg0 --description="WireGuard VPN" --needs_exposed_
 yunohost service add wireguard_ui --description="WireGuard UI"
 
 #=================================================
-# START SYSTEMD SERVICE
+# START UI SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression --message="Starting the systemd service for the UI..." --weight=1
 
 # Start a systemd service
 ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
+
+#=================================================
+# START VPN SYSTEMD SERVICE
+#=================================================
+ynh_script_progression --message="Starting the systemd service for the VPN..." --weight=1
+
+# Start and enable a systemd service
+systemctl enable --now wg-quick@wg0
 
 #=================================================
 # SETUP SSOWAT
