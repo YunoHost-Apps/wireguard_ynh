@@ -7,11 +7,7 @@
 # WireGuard was integrated in Linux kernel 5.6
 # Before that, we need Linux Headers
 if dpkg --compare-versions $(uname -r) lt 5.6; then
-    if grep "Raspberry Pi" /proc/device-tree/model; then
-        pkg_headers="raspberrypi-kernel-headers"
-    else
-        pkg_headers="linux-headers-$(uname -r)"
-    fi
+    pkg_headers="raspberrypi-kernel-headers|linux-headers-generic|linux-headers-virtual|linux-headers-$(uname -r)"
 else
     pkg_headers=""
 fi
