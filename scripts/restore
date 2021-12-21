@@ -144,7 +144,7 @@ ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="ht
 ynh_script_progression --message="Starting the systemd service for the VPN..." --weight=1
 
 # Start and enable a systemd service
-systemctl enable --now wg-quick@wg0
+systemctl enable --now --quiet wg-quick@wg0
 
 #=================================================
 # GENERIC FINALIZATION
