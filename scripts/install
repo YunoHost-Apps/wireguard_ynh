@@ -134,10 +134,6 @@ ynh_delete_file_checksum --file="$final_path/db/server/interfaces.json"
 # Create WireGuard configuration directory
 mkdir -p /etc/wireguard
 
-# Add interface configuration file for WireGuard
-ynh_add_config --template="../conf/wg0.conf" --destination="/etc/wireguard/wg0.conf"
-ynh_delete_file_checksum --file="/etc/wireguard/wg0.conf"
-
 #=================================================
 # SETUP SYSTEMD
 #=================================================
