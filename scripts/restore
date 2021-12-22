@@ -99,7 +99,7 @@ ynh_pin_repo --package="wireguard*" --pin="origin deb http://deb.debian.org/debi
 # Update the list of package with the new repo
 ynh_package_update
 
-ynh_install_app_dependencies --package="$pkg_dependencies"
+ynh_add_app_dependencies --package="$pkg_dependencies"
 
 #Remove buster-backports repo and pin-priority
 ynh_remove_extra_repo --name=$app
