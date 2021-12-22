@@ -5,6 +5,8 @@
 * Use YunoHost permissions panel to allow users to access the web UI.
 * Only one network interface, *wg0*, can be managed with this app at the moment.
 
+After installation, you need to `Apply Config` once in the UI before the VPN service can be started.
+
 ### Make your server share its Internet connection
 
 #### Enable port forwarding
@@ -16,17 +18,5 @@ net.ipv4.ip_forward = 1
 net.ipv6.conf.all.forwarding = 1
 # Save and quit (CTRL+O, CTRL+X)
 sudo sysctl -p
-```
-
-Add the following commands in `WireGuard Server` menu, like in [this picture](https://user-images.githubusercontent.com/8769166/124400150-cf354980-dd20-11eb-87c6-9478938d9c82.png). Replace `eth0` with the interface connected to the Internet:
-
-#### Post Up Script
-```
-iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-```
-
-#### Post Down Script
-```
-iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
 ```
 
