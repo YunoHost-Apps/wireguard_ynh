@@ -190,13 +190,6 @@ systemctl enable --quiet wireguard@wg0.service
 # CONFIGURING WIREGUARD
 #=================================================
 
-# Create db directory for securing it later
-mkdir -p $final_path/db/server
-
-# Add interface configuration file
-cp ../conf/interfaces.json $final_path/db/server/interfaces.json
-ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --target_file="$final_path/db/server/interfaces.json"
-
 #=================================================
 # GENERIC FINALIZATION
 #=================================================

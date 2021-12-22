@@ -50,6 +50,7 @@ ynh_script_progression --message="Storing installation settings..." --weight=1
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=admin --value=$admin
+ynh_app_setting_set --app=$app --key=interface --value=$interface
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -127,16 +128,15 @@ ynh_system_user_create --username=$app
 mkdir -p $final_path/db/server
 
 # Add interface configuration file for the Web UI
-cp ../conf/interfaces.json $final_path/db/server/interfaces.json
-ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --target_file="$final_path/db/server/interfaces.json"
+ynh_add_config --template="../conf/interfaces.json" --destination="$final_path/db/server/interfaces.json"
+ynh_delete_file_checksum --file="$final_path/db/server/interfaces.json"
 
 # Create WireGuard configuration directory
 mkdir -p /etc/wireguard
 
 # Add interface configuration file for WireGuard
-cp ../conf/wg0.conf /etc/wireguard/wg0.conf
-ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --target_file="/etc/wireguard/wg0.conf"
-ynh_replace_string --match_string="__PRIVATE_KEY__" --replace_string="$(wg genkey)" --target_file="/etc/wireguard/wg0.conf"
+ynh_add_config --template="../conf/wg0.conf" --destination="/etc/wireguard/wg0.conf"
+ynh_delete_file_checksum --file="/etc/wireguard/wg0.conf"
 
 #=================================================
 # SETUP SYSTEMD

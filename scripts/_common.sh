@@ -15,6 +15,8 @@ fi
 # dependencies used by the app
 pkg_dependencies="$pkg_headers wireguard-dkms wireguard"
 
+interface=$(ip route | awk '/default/ { print $5 }')
+
 #=================================================
 # PERSONAL HELPERS
 #=================================================
