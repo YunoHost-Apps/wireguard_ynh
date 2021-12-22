@@ -147,12 +147,12 @@ ynh_script_progression --message="Configuring a systemd service..." --weight=1
 ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service
 
 # Create a dedicated systemd config for monitoring WireGuard's configuration
-cp ../conf/wireguard_ui_conf.path /etc/systemd/system/wireguard_ui_conf.path
-systemctl enable --quiet wireguard_ui_conf.path
+cp ../conf/wireguard@.path /etc/systemd/system/wireguard@.path
+systemctl enable --quiet wireguard@wg0.path
 
-# Create a dedicated systemd config for restarting WireGuard when its configuration changes
-ynh_add_systemd_config --service=wireguard_ui_conf --template=wireguard_ui_conf.service
-systemctl enable --quiet wireguard_ui_conf.service
+# Create a dedicated systemd config for WireGuard
+cp ../conf/wireguard@.service /etc/systemd/system/wireguard@.service
+systemctl enable --quiet wireguard@wg0.service
 
 #=================================================
 # GENERIC FINALIZATION
@@ -174,7 +174,7 @@ chown -R $app: /etc/wireguard
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add wg-quick@wg0 --description="WireGuard VPN" --needs_exposed_ports="$port_wg" --test_status="wg show | grep wg0"
+yunohost service add wireguard@wg0 --description="WireGuard VPN" --needs_exposed_ports="$port_wg" --test_status="wg show | grep wg0"
 yunohost service add wireguard_ui --description="WireGuard UI"
 
 #=================================================
@@ -184,14 +184,6 @@ ynh_script_progression --message="Starting the systemd service for the UI..." --
 
 # Start a systemd service
 ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
-
-#=================================================
-# START VPN SYSTEMD SERVICE
-#=================================================
-ynh_script_progression --message="Starting the systemd service for the VPN..." --weight=1
-
-# Start and enable a systemd service
-systemctl enable --now --quiet wg-quick@wg0
 
 #=================================================
 # SETUP SSOWAT

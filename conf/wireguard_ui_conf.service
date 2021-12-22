@@ -1,8 +1,0 @@
-[Unit]
-Description=WireGuard restart
-After=network.target
-
-[Service]
-Type=oneshot
-User=root
-ExecStart=systemctl restart wg-quick@wg0.service
