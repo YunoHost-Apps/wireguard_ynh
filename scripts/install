@@ -142,13 +142,12 @@ ynh_script_progression --message="Configuring a systemd service..." --weight=1
 # Create a dedicated systemd config for the web UI
 ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service
 
-# Create a dedicated systemd config for monitoring WireGuard's configuration
-cp ../conf/wireguard@.path /etc/systemd/system/wireguard@.path
-systemctl enable --quiet wireguard@wg0.path
-
-# Create a dedicated systemd config for WireGuard
+# Create dedicated systemd configs for starting and monitoring WireGuard's configuration
 cp ../conf/wireguard@.service /etc/systemd/system/wireguard@.service
+cp ../conf/wireguard@.path /etc/systemd/system/wireguard@.path
+systemctl daemon-reload
 systemctl enable --quiet wireguard@wg0.service
+systemctl enable --quiet --now wireguard@wg0.path
 
 #=================================================
 # GENERIC FINALIZATION
