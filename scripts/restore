@@ -120,6 +120,14 @@ systemctl enable --quiet wireguard@wg0.service
 systemctl enable --quiet --now wireguard@wg0.path
 
 #=================================================
+# ENABLE PORT FORWARDING
+#=================================================
+ynh_script_progression --message="Enabling port forwarding..." --weight=1
+
+ynh_restore_file --origin_path="/etc/sysctl.d/$app.conf"
+sysctl -p /etc/sysctl.d/$app.conf
+
+#=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1

@@ -111,6 +111,9 @@ fi
 # Remove sudoers file
 ynh_secure_remove --file="/etc/sudoers.d/${app}_ynh"
 
+# Remove sysctl file for port forwarding
+ynh_secure_remove --file="/etc/sysctl.d/$app.conf"
+
 #=================================================
 # GENERIC FINALIZATION
 #=================================================

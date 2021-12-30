@@ -150,6 +150,14 @@ systemctl enable --quiet wireguard@wg0.service
 systemctl enable --quiet --now wireguard@wg0.path
 
 #=================================================
+# ENABLE PORT FORWARDING
+#=================================================
+ynh_script_progression --message="Enabling port forwarding..." --weight=1
+
+ynh_add_config --template="../conf/sysctl.conf" --destination="/etc/sysctl.d/$app.conf"
+sysctl -p /etc/sysctl.d/$app.conf
+
+#=================================================
 # GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
