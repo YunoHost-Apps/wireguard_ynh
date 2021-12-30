@@ -27,6 +27,7 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 path_url="/"
 admin=$YNH_APP_ARG_ADMIN
+architecture=$YNH_ARCH
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -49,13 +50,14 @@ ynh_script_progression --message="Storing installation settings..." --weight=1
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=admin --value=$admin
+ynh_app_setting_set --app=$app --key=interface --value=$interface
 
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
 # FIND AND OPEN A PORT
 #=================================================
-ynh_script_progression --message="Configuring firewall..." --weight=1
+ynh_script_progression --message="Finding an available port..." --weight=1
 
 # Find an available port for WireGuard
 port_wg=$(ynh_find_port --port=8095)
@@ -66,6 +68,7 @@ port=$(ynh_find_port --port=$(($port_wg+1)))
 ynh_app_setting_set --app=$app --key=port --value=$port
 
 # Open the WireGuard port
+ynh_script_progression --message="Configuring firewall..." --weight=1
 ynh_exec_warn_less yunohost firewall allow --no-upnp UDP $port_wg
 
 #=================================================
@@ -97,12 +100,12 @@ ynh_script_progression --message="Setting up source files..." --weight=1
 
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source --dest_dir="$final_path" --source_id="$(ynh_detect_arch)"
+ynh_setup_source --dest_dir="$final_path" --source_id="$architecture"
 
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring nginx web server..." --weight=1
+ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
@@ -115,10 +118,6 @@ ynh_script_progression --message="Configuring system user..." --weight=1
 # Create a system user
 ynh_system_user_create --username=$app
 
-# Ensure the system user has enough permissions
-install -b -o root -g root -m 0440 ../conf/sudoers.conf /etc/sudoers.d/${app}_ynh
-ynh_replace_string "__USER__" "${app}" /etc/sudoers.d/${app}_ynh
-
 #=================================================
 # SPECIFIC SETUP
 #=================================================
@@ -129,16 +128,11 @@ ynh_replace_string "__USER__" "${app}" /etc/sudoers.d/${app}_ynh
 mkdir -p $final_path/db/server
 
 # Add interface configuration file for the Web UI
-cp ../conf/interfaces.json $final_path/db/server/interfaces.json
-ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --target_file="$final_path/db/server/interfaces.json"
+ynh_add_config --template="../conf/interfaces.json" --destination="$final_path/db/server/interfaces.json"
+ynh_delete_file_checksum --file="$final_path/db/server/interfaces.json"
 
 # Create WireGuard configuration directory
 mkdir -p /etc/wireguard
-
-# Add interface configuration file for WireGuard
-cp ../conf/wg0.conf /etc/wireguard/wg0.conf
-ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --target_file="/etc/wireguard/wg0.conf"
-ynh_replace_string --match_string="__PRIVATE_KEY__" --replace_string="$(wg genkey)" --target_file="/etc/wireguard/wg0.conf"
 
 #=================================================
 # SETUP SYSTEMD
@@ -148,12 +142,20 @@ ynh_script_progression --message="Configuring a systemd service..." --weight=1
 # Create a dedicated systemd config for the web UI
 ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service
 
-# Create a dedicated systemd config for monitoring WireGuard's configuration
-cp ../conf/wireguard_ui_conf.path /etc/systemd/system/wireguard_ui_conf.path
-systemctl enable --quiet wireguard_ui_conf.path
+# Create dedicated systemd configs for starting and monitoring WireGuard's configuration
+cp ../conf/wireguard@.service /etc/systemd/system/wireguard@.service
+cp ../conf/wireguard@.path /etc/systemd/system/wireguard@.path
+systemctl daemon-reload
+systemctl enable --quiet wireguard@wg0.service
+systemctl enable --quiet --now wireguard@wg0.path
 
-# Create a dedicated systemd config for restarting WireGuard when its configuration changes
-ynh_add_systemd_config --service=wireguard_ui_conf --template=wireguard_ui_conf.service
+#=================================================
+# ENABLE PORT FORWARDING
+#=================================================
+ynh_script_progression --message="Enabling port forwarding..." --weight=1
+
+ynh_add_config --template="../conf/sysctl.conf" --destination="/etc/sysctl.d/$app.conf"
+sysctl -p /etc/sysctl.d/$app.conf
 
 #=================================================
 # GENERIC FINALIZATION
@@ -175,13 +177,13 @@ chown -R $app: /etc/wireguard
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add wg-quick@wg0 --description "WireGuard VPN" --needs_exposed_ports $port_wg --test_status "wg show | grep wg0"
-yunohost service add wireguard_ui --description "WireGuard UI"
+yunohost service add wireguard@wg0 --description="WireGuard VPN" --needs_exposed_ports="$port_wg" --test_status="wg show | grep wg0"
+yunohost service add wireguard_ui --description="WireGuard UI"
 
 #=================================================
-# START SYSTEMD SERVICE
+# START UI SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression --message="Starting the systemd service for the UI..." --weight=1
 
 # Start a systemd service
 ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
@@ -191,12 +193,12 @@ ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="ht
 #=================================================
 ynh_script_progression --message="Configuring permissions..." --weight=1
 
-ynh_permission_update --permission "main" --remove "all_users" --add "$admin"
+ynh_permission_update --permission="main" --remove="all_users" --add="$admin"
 
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..." --weight=1
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 

@@ -4,15 +4,18 @@
 # COMMON VARIABLES
 #=================================================
 
-# dependencies used by the app
-if grep "Raspberry Pi" /proc/device-tree/model; then
-    pkg_headers="raspberrypi-kernel-headers"
+# WireGuard was integrated in Linux kernel 5.6
+# Before that, we need Linux Headers
+if dpkg --compare-versions $(uname -r) lt 5.6; then
+    pkg_headers="raspberrypi-kernel-headers|linux-headers-generic|linux-headers-virtual|linux-headers-$(uname -r)"
 else
-    pkg_headers="linux-headers-$(uname -r)"
+    pkg_headers=""
 fi
 
 # dependencies used by the app
 pkg_dependencies="$pkg_headers wireguard-dkms wireguard"
+
+interface=$(ip route | awk '/default/ { print $5 }')
 
 #=================================================
 # PERSONAL HELPERS
@@ -62,30 +65,6 @@ ynh_install_repo_gpg () {
 #=================================================
 # EXPERIMENTAL HELPERS
 #=================================================
-
-# Check the architecture
-#
-# example: architecture=$(ynh_detect_arch)
-#
-# usage: ynh_detect_arch
-#
-# Requires YunoHost version 2.2.4 or higher.
-
-ynh_detect_arch(){
-	local architecture
-	if [ -n "$(uname -m | grep arm64)" ] || [ -n "$(uname -m | grep aarch64)" ]; then
-		architecture="arm64"
-	elif [ -n "$(uname -m | grep 64)" ]; then
-		architecture="amd64"
-	elif [ -n "$(uname -m | grep 86)" ]; then
-		architecture="386"
-	elif [ -n "$(uname -m | grep arm)" ]; then
-		architecture="arm"
-	else
-		architecture="unknown"
-	fi
-	echo $architecture
-}
 
 # Send an email to inform the administrator
 #

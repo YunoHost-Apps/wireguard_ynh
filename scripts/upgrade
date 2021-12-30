@@ -21,6 +21,7 @@ path_url=$(ynh_app_setting_get --app=$app --key=path)
 port=$(ynh_app_setting_get --app=$app --key=port)
 port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+architecture=$YNH_ARCH
 
 #=================================================
 # CHECK VERSION
@@ -70,14 +71,13 @@ then
 fi
 
 # Downgrade linux-image-$arch if updated to the buster-backports version
-arch=$(ynh_detect_arch)
-linuximage_version=$(ynh_package_version --package=linux-image-$arch)
+linuximage_version=$(ynh_package_version --package=linux-image-$architecture)
 if [[ $linuximage_version == *"bpo10"* ]]
 then
 	# Downgrading using ynh_package_install apt command without "--no-remove" and with "--allow-downgrades"
 	# It will remove wireguard-ynh-deps and wireguard but they will be reinstalled throught upgrade process
 	ynh_apt --allow-downgrades --option Dpkg::Options::=--force-confdef \
-        --option Dpkg::Options::=--force-confold install linux-image-$arch/stable
+        --option Dpkg::Options::=--force-confold install linux-image-$architecture/stable
 
 	#Remove backports kernel if running on it and send a mail to the admin to ask him to reboot
 	linuxkernel_version=$(uname -r)
@@ -92,18 +92,21 @@ Now wireguard_ynh use a DKMS module allowing itself to be used with the stable k
 	fi
 fi
 
-# Add sudoers file if missing
+# Drop sudoers file if present
 if [ -f "/etc/sudoers.d/${app}_ynh" ]; then
-	install -b -o root -g root -m 0440 ../conf/sudoers.conf /etc/sudoers.d/${app}_ynh
-	ynh_replace_string "__USER__" "${app}" /etc/sudoers.d/${app}_ynh
+	ynh_secure_remove /etc/sudoers.d/${app}_ynh
 fi
 
 # Remove deprecated services
-if systemctl list-units --full -all | grep -Fq "wireguard.path"; then
-	systemctl disable --now --quiet wireguard.path
-	ynh_secure_remove --file="/etc/systemd/system/wireguard.path"
+if systemctl list-units --full -all | grep -Fq "wireguard_ui_conf.path"; then
+	systemctl disable --now --quiet wireguard_ui_conf.path
+	ynh_secure_remove --file="/etc/systemd/system/wireguard_ui_conf.path"
 fi
-ynh_remove_systemd_config --service="wireguard.service"
+if systemctl list-units --full -all | grep -Fq "wireguard_ui_conf.service"; then
+	systemctl disable --now --quiet wireguard_ui_conf.service
+	ynh_secure_remove --file="/etc/systemd/system/wireguard_ui_conf.service"
+	yunohost service remove wireguard_ui_conf
+fi
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -113,7 +116,7 @@ ynh_remove_systemd_config --service="wireguard.service"
 ynh_script_progression --message="Stopping a systemd service..." --weight=1
 
 ynh_systemd_action --service_name=wireguard_ui --action="stop" --line_match="Stopped WireGuard UI" --log_path="systemd" --timeout=30
-ynh_systemd_action --service_name=wg-quick@wg0 --action="stop" --line_match="Stopped WireGuard via wg-quick(8) for wg0." --log_path="systemd" --timeout=30
+ynh_systemd_action --service_name=wireguard@wg0 --action="stop"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -124,13 +127,13 @@ then
 	ynh_script_progression --message="Upgrading source files..." --weight=1
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path" --source_id="$(ynh_detect_arch)"
+	ynh_setup_source --dest_dir="$final_path" --source_id="$architecture"
 fi
 
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Upgrading nginx web server configuration..." --weight=1
+ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=1
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
@@ -175,23 +178,20 @@ ynh_script_progression --message="Upgrading systemd configuration..." --weight=1
 # Create a dedicated systemd config for the web UI
 ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service
 
-# Create a dedicated systemd config for monitoring WireGuard's configuration
-cp ../conf/wireguard_ui_conf.path /etc/systemd/system/wireguard_ui_conf.path
-systemctl enable --quiet wireguard_ui_conf.path
-
-# Create a dedicated systemd config for restarting WireGuard when its configuration changes
-ynh_add_systemd_config --service=wireguard_ui_conf --template=wireguard_ui_conf.service
+# Create dedicated systemd configs for starting and monitoring WireGuard's configuration
+cp ../conf/wireguard@.service /etc/systemd/system/wireguard@.service
+cp ../conf/wireguard@.path /etc/systemd/system/wireguard@.path
+systemctl daemon-reload
+systemctl enable --quiet wireguard@wg0.service
+systemctl enable --quiet --now wireguard@wg0.path
 
 #=================================================
-# CONFIGURING WIREGUARD
+# ENABLE PORT FORWARDING
 #=================================================
+ynh_script_progression --message="Enabling port forwarding..." --weight=1
 
-# Create db directory for securing it later
-mkdir -p $final_path/db/server
-
-# Add interface configuration file
-cp ../conf/interfaces.json $final_path/db/server/interfaces.json
-ynh_replace_string --match_string="__PORT_WG__" --replace_string="$port_wg" --target_file="$final_path/db/server/interfaces.json"
+ynh_add_config --template="../conf/sysctl.conf" --destination="/etc/sysctl.d/$app.conf"
+sysctl -p /etc/sysctl.d/$app.conf
 
 #=================================================
 # GENERIC FINALIZATION
@@ -213,17 +213,16 @@ chown -R $app: /etc/wireguard
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add wg-quick@wg0 --description "WireGuard VPN" --needs_exposed_ports "$port_wg" --test_status "wg show | grep wg0"
-yunohost service add wireguard_ui --description "WireGuard UI"
+yunohost service add wireguard@wg0 --description="WireGuard VPN" --needs_exposed_ports="$port_wg" --test_status="wg show | grep wg0"
+yunohost service add wireguard_ui --description="WireGuard UI"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression --message="Starting the systemd service for the UI..." --weight=1
 
 # Start a systemd service
 ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
-sleep 5
 
 #=================================================
 # RELOAD NGINX

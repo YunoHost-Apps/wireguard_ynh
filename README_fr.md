@@ -11,9 +11,9 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 ## Vue d'ensemble
 
-Réseaux Privés Virtuels (VPN) via WireGuard, avec une web UI pour faciliter sa configuration
+WireGuard® is fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec. It intends to be considerably more performant than OpenVPN. WireGuard is designed as a general purpose VPN.
 
-**Version incluse :** 0.2.7~ynh8
+**Version incluse :** 0.3.2~ynh1
 
 
 
@@ -27,35 +27,12 @@ Réseaux Privés Virtuels (VPN) via WireGuard, avec une web UI pour faciliter sa
 * Cette application ajoutera un module DMKS à votre noyau Linux.
   * Vous devriez redémarrer votre serveur pour que WireGuard puisse se lancer.
 * Cette application inclut WireGuard et une interface web non-officielle pour le configurer.
-  * Évitez de modifier les fichiers de configuration via la ligne de commande.
+  * Ne modifiez pas les fichiers de configuration à la main.
 * Utiliser le panneau de permissions de YunoHost pour autoriser des utilisateurs à accéder à WireGuard UI.
 * Une seule interface réseau, *wg0*, peut actuellement être gérée par cette app.
+* La page `Status` demeure non fonctionnelle pour l'instant.
 
-### Partagez votre connexion Internet via WireGuard
-
-#### Activez le *port forwarding*
-
-```bash
-sudo nano /etc/sysctl.conf
-# Décommentez les lignes suivantes :
-net.ipv4.ip_forward = 1
-net.ipv6.conf.all.forwarding = 1
-# Sauvegardez et quittez (CTRL+O, CTRL+X)
-sudo sysctl -p
-```
-
-Ajoutez les commandes suivantes dans le menu `WireGuard Server`, tel que dans [cette image](https://user-images.githubusercontent.com/8769166/124400150-cf354980-dd20-11eb-87c6-9478938d9c82.png). Remplacez `eth0` avec l'interface connectée à Internet :
-
-#### Post Up Script
-```
-iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-```
-
-#### Post Down Script
-```
-iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
-```
-
+Après installation, vous devrez cliquer sur `Apply Config` une fois dans l'UI avant que le service VPN puisse être démarré.
 
 ## Documentations et ressources
 

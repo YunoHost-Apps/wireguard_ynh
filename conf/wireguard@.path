@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch WireGuard %I.conf for changes
+
+[Path]
+PathModified=/etc/wireguard/%I.conf
+
+[Install]
+WantedBy=multi-user.target
