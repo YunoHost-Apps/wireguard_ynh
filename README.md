@@ -34,6 +34,7 @@ WireGuard® is fast and modern VPN that utilizes state-of-the-art cryptography. 
   * Do not manually alter the configuration files.
 * Use YunoHost permissions panel to allow users to access the web UI.
 * Only one network interface, *wg0*, can be managed with this app at the moment.
+* `Status` page is not working for the time being.
 
 After installation, you need to `Apply Config` once in the UI before the VPN service can be started.
 
