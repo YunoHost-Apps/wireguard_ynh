@@ -105,7 +105,6 @@ fi
 if systemctl list-units --full -all | grep -Fq "wireguard_ui_conf.service"; then
 	systemctl disable --now --quiet wireguard_ui_conf.service
 	ynh_secure_remove --file="/etc/systemd/system/wireguard_ui_conf.service"
-	yunohost service remove wireguard_ui_conf
 fi
 
 #=================================================
