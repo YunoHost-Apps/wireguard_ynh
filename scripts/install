@@ -131,6 +131,9 @@ mkdir -p $final_path/db/server
 ynh_add_config --template="../conf/interfaces.json" --destination="$final_path/db/server/interfaces.json"
 ynh_delete_file_checksum --file="$final_path/db/server/interfaces.json"
 
+# Add configuration for the Web UI
+ynh_add_config --template="../conf/wireguard-ui.env" --destination="$final_path/wireguard-ui.env"
+
 # Create WireGuard configuration directory
 mkdir -p /etc/wireguard
 

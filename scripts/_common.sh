@@ -17,6 +17,8 @@ pkg_dependencies="$pkg_headers wireguard-dkms wireguard"
 
 interface=$(ip route | awk '/default/ { print $5 }')
 
+main_domain=$(cat /etc/yunohost/current_host)
+
 #=================================================
 # PERSONAL HELPERS
 #=================================================
