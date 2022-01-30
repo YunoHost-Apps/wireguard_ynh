@@ -130,6 +130,14 @@ then
 fi
 
 #=================================================
+# UPDATE A CONFIG FILE
+#=================================================
+ynh_script_progression --message="Updating a configuration file..." --weight=1
+
+# Update configuration for the Web UI
+ynh_add_config --template="../conf/wireguard-ui.env" --destination="$final_path/wireguard-ui.env"
+
+#=================================================
 # NGINX CONFIGURATION
 #=================================================
 ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=1
