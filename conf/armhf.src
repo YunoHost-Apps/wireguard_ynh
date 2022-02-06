@@ -1,5 +1,6 @@
-SOURCE_URL=https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.2/wireguard-ui-v0.3.2-linux-arm.tar.gz
-SOURCE_SUM=4632fd96c7574321031907695fbbe6535884a8006b517c7f7d3ab289fb94be5f
+SOURCE_URL=https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.6/wireguard-ui-v0.3.6-linux-arm.tar.gz
+SOURCE_SUM=37c0235e0a2c30545874e640a339adf99ac950b9e9ad7e27e3b59c1cdaec5cd1
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=tar.gz
 SOURCE_IN_SUBDIR=false
+SOURCE_FILENAME=

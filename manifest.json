@@ -6,7 +6,7 @@
         "en": "Web user interface to manage your WireGuard setup",
         "fr": "Interface utilisateur Web pour gérer votre configuration WireGuard"
     },
-    "version": "0.3.2~ynh2",
+    "version": "0.3.6~ynh1",
     "url": "https://github.com/ngoduykhanh/wireguard-ui",
     "upstream": {
         "license": "MIT",
@@ -26,7 +26,7 @@
         "nginx"
     ],
     "arguments": {
-        "install" : [
+        "install": [
             {
                 "name": "warning",
                 "type": "display_text",

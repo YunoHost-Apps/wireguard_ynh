@@ -7,7 +7,8 @@ Type=simple
 User=__APP__
 Group=__APP__
 WorkingDirectory=__FINALPATH__/
-ExecStart=__FINALPATH__/wireguard-ui --bind-address="127.0.0.1:__PORT__" --disable-login
+EnvironmentFile=__FINALPATH__/wireguard-ui.env
+ExecStart=__FINALPATH__/wireguard-ui
 
 # Sandboxing options to harden security
 # Depending on specificities of your service/app, you may need to tweak these 
