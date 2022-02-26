@@ -107,6 +107,12 @@ if systemctl list-units --full -all | grep -Fq "wireguard_ui_conf.service"; then
 	ynh_secure_remove --file="/etc/systemd/system/wireguard_ui_conf.service"
 fi
 
+# Remove the service integration from an older version
+if ynh_exec_warn_less yunohost service status wireguard@wg0 >/dev/null
+then
+	yunohost service remove wireguard@wg0
+fi
+
 #=================================================
 # STANDARD UPGRADE STEPS
 #=================================================
@@ -115,7 +121,7 @@ fi
 ynh_script_progression --message="Stopping a systemd service..." --weight=1
 
 ynh_systemd_action --service_name=wireguard_ui --action="stop" --line_match="Stopped WireGuard UI" --log_path="systemd" --timeout=30
-ynh_systemd_action --service_name=wireguard@wg0 --action="stop"
+ynh_systemd_action --service_name=wg-quick@wg0 --action="stop"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -220,7 +226,7 @@ chown -R $app: /etc/wireguard
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add wireguard@wg0 --description="WireGuard VPN" --needs_exposed_ports="$port_wg" --test_status="wg show | grep wg0"
+yunohost service add wg-quick@wg0 --description="WireGuard VPN" --needs_exposed_ports="$port_wg" --test_status="wg show | grep wg0"
 yunohost service add wireguard_ui --description="WireGuard UI"
 
 #=================================================

@@ -6,9 +6,7 @@ Wants=network-online.target nss-lookup.target
 [Service]
 Type=oneshot
 User=root
-RemainAfterExit=yes
 ExecStart=/bin/systemctl restart wg-quick@%I.service
-ExecStop=/bin/systemctl stop wg-quick@%I.service
 
 [Install]
 WantedBy=multi-user.target
