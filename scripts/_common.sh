@@ -15,7 +15,7 @@ fi
 # dependencies used by the app
 pkg_dependencies="$pkg_headers wireguard-dkms wireguard"
 
-interface=$(ip route | awk '/default/ { print $5 }')
+interface=$(ip route | awk '/default/ { print $5 }' | head -n1)
 
 main_domain=$(cat /etc/yunohost/current_host)
 

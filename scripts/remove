@@ -35,10 +35,10 @@ then
 	yunohost service remove wireguard_ui
 fi
 
-if ynh_exec_warn_less yunohost service status wireguard@wg0 >/dev/null
+if ynh_exec_warn_less yunohost service status wg-quick@wg0 >/dev/null
 then
 	ynh_script_progression --message="Removing WireGuard service integration..." --weight=1
-	yunohost service remove wireguard@wg0
+	yunohost service remove wg-quick@wg0
 fi
 
 #=================================================
