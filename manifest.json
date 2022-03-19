@@ -3,8 +3,8 @@
     "id": "wireguard",
     "packaging_format": 1,
     "description": {
-        "en": "Web user interface to manage your WireGuard setup",
-        "fr": "Interface utilisateur Web pour gérer votre configuration WireGuard"
+        "en": "Fast and modern VPN server, including a configuration webapp",
+        "fr": "Serveur VPN rapide et moderne, incluant une webapp pour le configurer"
     },
     "version": "0.3.6~ynh2",
     "url": "https://github.com/ngoduykhanh/wireguard-ui",
