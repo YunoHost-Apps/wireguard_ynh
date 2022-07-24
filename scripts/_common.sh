@@ -13,7 +13,7 @@ else
 fi
 
 # dependencies used by the app
-pkg_dependencies="$pkg_headers wireguard-dkms wireguard"
+pkg_dependencies="$pkg_headers dkms wireguard-dkms wireguard"
 
 interface=$(ip route | awk '/default/ { print $5 }' | head -n1)
 
