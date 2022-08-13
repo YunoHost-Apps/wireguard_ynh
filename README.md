@@ -5,7 +5,7 @@ It shall NOT be edited by hand.
 
 # WireGuard for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/wireguard.svg)](https://dash.yunohost.org/appci/app/wireguard) ![](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/wireguard.svg)](https://dash.yunohost.org/appci/app/wireguard) ![Working status](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)  
 [![Install WireGuard with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -20,11 +20,10 @@ Virtual Private Networks (VPN) via WireGuard, with a web UI to ease configuratio
 **Shipped version:** 0.2.7~ynh8
 
 
-
 ## Screenshots
 
-![](./doc/screenshots/screenshot.png)
-![](./doc/screenshots/screenshot.png:Zone.Identifier)
+![Screenshot of WireGuard](./doc/screenshots/screenshot.png)
+![Screenshot of WireGuard](./doc/screenshots/screenshot.png:Zone.Identifier)
 
 ## Disclaimers / important information
 
@@ -63,20 +62,21 @@ iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptabl
 
 ## Documentation and resources
 
-* Official app website: https://www.wireguard.com/
-* Upstream app code repository: https://github.com/ngoduykhanh/wireguard-ui
-* YunoHost documentation for this app: https://yunohost.org/app_wireguard
-* Report a bug: https://github.com/YunoHost-Apps/wireguard_ynh/issues
+* Official app website: <https://www.wireguard.com/>
+* Upstream app code repository: <https://github.com/ngoduykhanh/wireguard-ui>
+* YunoHost documentation for this app: <https://yunohost.org/app_wireguard>
+* Report a bug: <https://github.com/YunoHost-Apps/wireguard_ynh/issues>
 
 ## Developer info
 
 Please send your pull request to the [testing branch](https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing).
 
 To try the testing branch, please proceed like that.
-```
+
+``` bash
 sudo yunohost app install https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
 or
 sudo yunohost app upgrade wireguard -u https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
 ```
 
-**More info regarding app packaging:** https://yunohost.org/packaging_apps
+**More info regarding app packaging:** <https://yunohost.org/packaging_apps>
