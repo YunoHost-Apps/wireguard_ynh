@@ -39,8 +39,7 @@ final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 #=================================================
 ynh_script_progression --message="Validating restoration parameters..." --weight=1
 
-test ! -d $final_path \
-	|| ynh_die --message="There is already a directory: $final_path "
+test ! -d $final_path || ynh_die --message="There is already a directory: $final_path "
 
 #=================================================
 # STANDARD RESTORATION STEPS
@@ -65,9 +64,6 @@ ynh_script_progression --message="Recreating the dedicated system user..." --wei
 
 # Create the dedicated user (if not existing)
 ynh_system_user_create --username=$app
-
-# Restore sudoers file
-ynh_restore_file --origin_path="/etc/sudoers.d/${app}_ynh"
 
 #=================================================
 # RESTORE USER RIGHTS
@@ -97,12 +93,22 @@ ynh_install_app_dependencies "$pkg_dependencies"
 ynh_script_progression --message="Restoring the systemd configuration..." --weight=1
 
 ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui.service
-ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui_conf.path
-ynh_restore_file --origin_path=/etc/systemd/system/wireguard_ui_conf.service
+ynh_restore_file --origin_path=/etc/systemd/system/wireguard@.service
+ynh_restore_file --origin_path=/etc/systemd/system/wireguard@.path
+
+systemctl daemon-reload
 
 systemctl enable --quiet wireguard_ui.service
-systemctl enable --quiet wireguard_ui_conf.path
-systemctl enable --quiet wireguard_ui_conf.service
+systemctl enable --quiet wireguard@wg0.service
+systemctl enable --quiet --now wireguard@wg0.path
+
+#=================================================
+# ENABLE PORT FORWARDING
+#=================================================
+ynh_script_progression --message="Enabling port forwarding..." --weight=1
+
+ynh_restore_file --origin_path="/etc/sysctl.d/$app.conf"
+sysctl -p /etc/sysctl.d/$app.conf
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
@@ -119,12 +125,11 @@ yunohost service add wireguard_ui --description="WireGuard UI"
 ynh_restore_file --origin_path=$(jq -r ".config_file_path" $final_path/db/server/global_settings.json) --not_mandatory
 
 #=================================================
-# START SYSTEMD SERVICE
+# START UI SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression --message="Starting the systemd service for the UI..." --weight=1
 
 ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
-sleep 5
 
 #=================================================
 # GENERIC FINALIZATION
