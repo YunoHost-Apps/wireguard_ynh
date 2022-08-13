@@ -19,7 +19,7 @@
         "email": "tituspijean@outlook.com"
     },
     "requirements": {
-        "yunohost": ">= 4.2.8"
+        "yunohost": ">= 11"
     },
     "multi_instance": false,
     "services": [
