@@ -4,6 +4,10 @@
 # COMMON VARIABLES
 #=================================================
 
+interface=$(ip route | awk '/default/ { print $5 }' | head -n1)
+
+main_domain=$(cat /etc/yunohost/current_host)
+
 # dependencies used by the app
 pkg_dependencies="wireguard"
 
