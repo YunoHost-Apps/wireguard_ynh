@@ -5,25 +5,24 @@ It shall NOT be edited by hand.
 
 # WireGuard pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/wireguard.svg)](https://dash.yunohost.org/appci/app/wireguard) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)  
+[![Niveau d’intégration](https://dash.yunohost.org/integration/wireguard.svg)](https://dash.yunohost.org/appci/app/wireguard) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)  
 [![Installer WireGuard avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer WireGuard rapidement et simplement sur un serveur YunoHost.
-Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d’installer WireGuard rapidement et simplement sur un serveur YunoHost.
+Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l’installer et en profiter.*
 
-## Vue d'ensemble
+## Vue d’ensemble
 
 WireGuard® is fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec. It intends to be considerably more performant than OpenVPN. WireGuard is designed as a general purpose VPN.
 
-**Version incluse :** 0.3.7~ynh2
+**Version incluse :** 0.4.0~ynh1
 
+## Captures d’écran
 
-## Captures d'écran
-
-![Capture d'écran de WireGuard](./doc/screenshots/screenshot.png)
-![Capture d'écran de WireGuard](./doc/screenshots/screenshot.png:Zone.Identifier)
+![Capture d’écran de WireGuard](./doc/screenshots/screenshot.png)
+![Capture d’écran de WireGuard](./doc/screenshots/screenshot.png:Zone.Identifier)
 
 ## Avertissements / informations importantes
 
@@ -39,8 +38,8 @@ Après installation, vous devrez cliquer sur `Apply Config` une fois dans l'UI a
 
 ## Documentations et ressources
 
-* Site officiel de l'app : <https://www.wireguard.com/>
-* Dépôt de code officiel de l'app : <https://github.com/ngoduykhanh/wireguard-ui>
+* Site officiel de l’app : <https://www.wireguard.com/>
+* Dépôt de code officiel de l’app : <https://github.com/ngoduykhanh/wireguard-ui>
 * Documentation YunoHost pour cette app : <https://yunohost.org/app_wireguard>
 * Signaler un bug : <https://github.com/YunoHost-Apps/wireguard_ynh/issues>
 
@@ -56,4 +55,4 @@ ou
 sudo yunohost app upgrade wireguard -u https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>
