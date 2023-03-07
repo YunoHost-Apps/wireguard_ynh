@@ -6,6 +6,7 @@ It shall NOT be edited by hand.
 # WireGuard for YunoHost
 
 [![Integration level](https://dash.yunohost.org/integration/wireguard.svg)](https://dash.yunohost.org/appci/app/wireguard) ![Working status](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
+
 [![Install WireGuard with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 
 *[Lire ce readme en français.](./README_fr.md)*
