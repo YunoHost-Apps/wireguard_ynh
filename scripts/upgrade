@@ -12,15 +12,15 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
+#REMOVEME? ynh_script_progression --message="Loading installation settings..." --weight=1
 
-app=$YNH_APP_INSTANCE_NAME
+#REMOVEME? app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-port=$(ynh_app_setting_get --app=$app --key=port)
-port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
+#REMOVEME? path=$(ynh_app_setting_get --app=$app --key=path)
+#REMOVEME? port=$(ynh_app_setting_get --app=$app --key=port)
+#REMOVEME? port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
+#REMOVEME? #REMOVEME? install_dir=$(ynh_app_setting_get --app=$app --key=install_dir)
 architecture=$YNH_ARCH
 
 #=================================================
@@ -32,34 +32,34 @@ upgrade_type=$(ynh_check_app_version_changed)
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
-ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=1
+#REMOVEME? ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=1
 
 # Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
+#REMOVEME? ynh_backup_before_upgrade
+#REMOVEME? ynh_clean_setup () {
 	# restore it if the upgrade fails
-	ynh_restore_upgradebackup
+#REMOVEME? 	ynh_restore_upgradebackup
 }
 # Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
+#REMOVEME? ynh_abort_if_errors
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
 
-# If final_path doesn't exist, create it
-if [ -z "$final_path" ]; then
-	final_path=/opt/yunohost/$app
-	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+# If install_dir doesn't exist, create it
+if [ -z "$install_dir" ]; then
+#REMOVEME? 	install_dir=/opt/yunohost/$app
+#REMOVEME? 	ynh_app_setting_set --app=$app --key=install_dir --value=$install_dir
 fi
 
 # Change port if WireGuard port is the same as WireGuard UI's
 if [ $port -eq $port_wg ]
 then
 	ynh_app_setting_delete --app=$app --key=port
-	port=$(ynh_find_port --port=$(($port_wg+1)))
-	ynh_app_setting_set --app=$app --key=port --value=$port
+#REMOVEME? 	port=$(ynh_find_port --port=$(($port_wg+1)))
+#REMOVEME? 	ynh_app_setting_set --app=$app --key=port --value=$port
 	# Let's remove the unused is_public key too
 	ynh_app_setting_delete --app=$app --key=is_public
 fi
@@ -67,7 +67,7 @@ fi
 # WireGuard UI should be private, really.
 if ynh_permission_has_user --permission=main --user=visitors
 then
-        ynh_permission_update --permission=main --remove=visitors
+#REMOVEME?         ynh_permission_update --permission=main --remove=visitors
 fi
 
 # Drop sudoers file if present
@@ -110,7 +110,7 @@ then
 	ynh_script_progression --message="Upgrading source files..." --weight=1
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path" --source_id="$architecture"
+	ynh_setup_source --dest_dir="$install_dir" 
 fi
 
 #=================================================
@@ -119,7 +119,7 @@ fi
 ynh_script_progression --message="Updating a configuration file..." --weight=1
 
 # Update configuration for the Web UI
-ynh_add_config --template="../conf/wireguard-ui.env" --destination="$final_path/wireguard-ui.env"
+ynh_add_config --template="../conf/wireguard-ui.env" --destination="$install_dir/wireguard-ui.env"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -132,17 +132,17 @@ ynh_add_nginx_config
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Upgrading dependencies..." --weight=7
+#REMOVEME? ynh_script_progression --message="Upgrading dependencies..." --weight=7
 
-ynh_install_app_dependencies "$pkg_dependencies"
+#REMOVEME? ynh_install_app_dependencies "$pkg_dependencies"
 
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
+#REMOVEME? ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
 
 # Create a dedicated user (if not existing)
-ynh_system_user_create --username=$app
+#REMOVEME? ynh_system_user_create --username=$app
 
 #=================================================
 # SETUP SYSTEMD
@@ -174,9 +174,9 @@ sysctl -p /etc/sysctl.d/$app.conf
 #=================================================
 
 # Set permissions to app files
-chmod 750 "$final_path"
-chmod -R o-rwx "$final_path"
-chown -R $app: "$final_path"
+chmod 750 "$install_dir"
+chmod -R o-rwx "$install_dir"
+chown -R $app: "$install_dir"
 
 chmod 750 /etc/wireguard
 chmod -R o-rwx /etc/wireguard
@@ -203,7 +203,7 @@ ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="ht
 #=================================================
 ynh_script_progression --message="Reloading nginx web server..." --weight=1
 
-ynh_systemd_action --service_name=nginx --action=reload
+#REMOVEME? ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
