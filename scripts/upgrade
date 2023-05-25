@@ -68,6 +68,8 @@ fi
 #=================================================
 ynh_script_progression --message="Updating a configuration file..." --weight=1
 
+main_domain=$(cat /etc/yunohost/current_host)
+
 # Update configuration for the Web UI
 ynh_add_config --template="../conf/wireguard-ui.env" --destination="$install_dir/wireguard-ui.env"
 
