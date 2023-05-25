@@ -23,7 +23,6 @@ WireGuard® is fast and modern VPN that utilizes state-of-the-art cryptography. 
 ## Captures d’écran
 
 ![Capture d’écran de WireGuard](./doc/screenshots/screenshot.png)
-![Capture d’écran de WireGuard](./doc/screenshots/screenshot.png:Zone.Identifier)
 
 ## Documentations et ressources
 
