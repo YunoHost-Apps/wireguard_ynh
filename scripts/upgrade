@@ -10,25 +10,10 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
-#=================================================
-#REMOVEME? ynh_script_progression --message="Loading installation settings..." --weight=1
-
-#REMOVEME? app=$YNH_APP_INSTANCE_NAME
-
-#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
-#REMOVEME? path=$(ynh_app_setting_get --app=$app --key=path)
-#REMOVEME? port=$(ynh_app_setting_get --app=$app --key=port)
-#REMOVEME? port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
-#REMOVEME? #REMOVEME? install_dir=$(ynh_app_setting_get --app=$app --key=install_dir)
-architecture=$YNH_ARCH
-
-#=================================================
 # CHECK VERSION
 #=================================================
 
 upgrade_type=$(ynh_check_app_version_changed)
-
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
