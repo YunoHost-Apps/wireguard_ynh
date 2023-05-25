@@ -10,120 +10,32 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# RETRIEVE ARGUMENTS
-#=================================================
-
-#REMOVEME? old_domain=$YNH_APP_OLD_DOMAIN
-#REMOVEME? old_path=$YNH_APP_OLD_PATH
-
-#REMOVEME? new_domain=$YNH_APP_NEW_DOMAIN
-#REMOVEME? new_path=$YNH_APP_NEW_PATH
-
-#REMOVEME? app=$YNH_APP_INSTANCE_NAME
-
-#=================================================
-# LOAD SETTINGS
-#=================================================
-#REMOVEME? ynh_script_progression --message="Loading installation settings..." --time --weight=1
-
-#REMOVEME? # Needed for helper "ynh_add_nginx_config"
-#REMOVEME? #REMOVEME? install_dir=$(ynh_app_setting_get --app=$app --key=install_dir)
-
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-ynh_script_progression --message="Backing up the app before changing its url (may take a while)..." --time --weight=1
-
-# Backup the current version of the app
-#REMOVEME? ynh_backup_before_upgrade
-#REMOVEME? ynh_clean_setup () {
-	# Remove the new domain config file, the remove script won't do it as it doesn't know yet its location.
-#REMOVEME? 	ynh_secure_remove --file="/etc/nginx/conf.d/$new_domain.d/$app.conf"
-
-	# restore it if the upgrade fails
-#REMOVEME? 	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-#REMOVEME? ynh_abort_if_errors
-
-#=================================================
-# CHECK WHICH PARTS SHOULD BE CHANGED
-#=================================================
-
-#REMOVEME? change_domain=0
-#REMOVEME? if [ "$old_domain" != "$new_domain" ]
-then
-	#REMOVEME? change_domain=1
-fi
-
-#REMOVEME? change_path=0
-#REMOVEME? if [ "$old_path" != "$new_path" ]
-then
-	#REMOVEME? change_path=1
-fi
-
-#=================================================
 # STANDARD MODIFICATIONS
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Stopping a systemd service..." --time --weight=1
+ynh_script_progression --message="Stopping a systemd service..." --weight=1
 
 ynh_systemd_action --service_name=wireguard_ui --action="stop" --line_match="Stopped WireGuard UI" --log_path="systemd" --timeout=30
 
 #=================================================
 # MODIFY URL IN NGINX CONF
 #=================================================
-#REMOVEME? ynh_script_progression --message="Updating nginx web server configuration..." --time --weight=1
+ynh_script_progression --message="Updating NGINX web server configuration..." --weight=1
 
-#REMOVEME? nginx_conf_path=/etc/nginx/conf.d/$old_domain.d/$app.conf
-
-#REMOVEME? # Change the path in the nginx config file
-if [ $change_path -eq 1 ]
-then
-#REMOVEME? 	# Make a backup of the original nginx config file if modified
-#REMOVEME? 	ynh_backup_if_checksum_is_different --file="$nginx_conf_path"
-#REMOVEME? 	# Set global variables for nginx helper
-#REMOVEME? 	domain="$old_domain"
-#REMOVEME? 	path="$new_path"
-#REMOVEME? 	# Create a dedicated nginx config
-#REMOVEME? 	ynh_add_nginx_config
-fi
-
-#REMOVEME? # Change the domain for nginx
-if [ $change_domain -eq 1 ]
-then
-	# Delete file checksum for the old conf file location
-#REMOVEME? 	ynh_delete_file_checksum --file="$nginx_conf_path"
-#REMOVEME? 	mv $nginx_conf_path /etc/nginx/conf.d/$new_domain.d/$app.conf
-	# Store file checksum for the new config file location
-#REMOVEME? 	ynh_store_file_checksum --file="/etc/nginx/conf.d/$new_domain.d/$app.conf"
-fi
-
-#=================================================
-# SPECIFIC MODIFICATIONS
-#=================================================
-# ...
-#=================================================
+ynh_change_url_nginx_config
 
 #=================================================
 # GENERIC FINALISATION
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --time --weight=1
+ynh_script_progression --message="Starting a systemd service..." --weight=1
 
 ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-#REMOVEME? ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
-
-#REMOVEME? #REMOVEME? ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Change of URL completed for $app" --time --last
+ynh_script_progression --message="Change of URL completed for $app" --last
