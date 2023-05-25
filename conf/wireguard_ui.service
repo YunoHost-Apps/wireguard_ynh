@@ -6,9 +6,9 @@ After=network.target wireguard.service
 Type=simple
 User=__APP__
 Group=__APP__
-WorkingDirectory=__FINALPATH__/
-EnvironmentFile=__FINALPATH__/wireguard-ui.env
-ExecStart=__FINALPATH__/wireguard-ui
+WorkingDirectory=__INSTALL_DIR__/
+EnvironmentFile=__INSTALL_DIR__/wireguard-ui.env
+ExecStart=__INSTALL_DIR__/wireguard-ui
 
 # Sandboxing options to harden security
 # Depending on specificities of your service/app, you may need to tweak these 

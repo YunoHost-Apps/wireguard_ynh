@@ -14,32 +14,32 @@ source /usr/share/yunohost/helpers
 # MANAGE SCRIPT FAILURE
 #=================================================
 
-ynh_clean_setup () {
+#REMOVEME? ynh_clean_setup () {
 	#### Remove this function if there's nothing to clean before calling the remove script.
 	true
 }
 # Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
+#REMOVEME? ynh_abort_if_errors
 
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
+#REMOVEME? ynh_script_progression --message="Loading installation settings..." --weight=1
 
-app=$YNH_APP_INSTANCE_NAME
+#REMOVEME? app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-port=$(ynh_app_setting_get --app=$app --key=port)
-port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
+#REMOVEME? path=$(ynh_app_setting_get --app=$app --key=path)
+#REMOVEME? port=$(ynh_app_setting_get --app=$app --key=port)
+#REMOVEME? port_wg=$(ynh_app_setting_get --app=$app --key=port_wg)
+#REMOVEME? #REMOVEME? install_dir=$(ynh_app_setting_get --app=$app --key=install_dir)
 
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
 #=================================================
-ynh_script_progression --message="Validating restoration parameters..." --weight=1
+#REMOVEME? ynh_script_progression --message="Validating restoration parameters..." --weight=1
 
-test ! -d $final_path || ynh_die --message="There is already a directory: $final_path "
+#REMOVEME? test ! -d $install_dir || ynh_die --message="There is already a directory: $install_dir "
 
 #=================================================
 # STANDARD RESTORATION STEPS
@@ -54,25 +54,25 @@ ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 #=================================================
 ynh_script_progression --message="Restoring the app main directory..." --weight=1
 
-ynh_restore_file --origin_path="$final_path"
+ynh_restore_file --origin_path="$install_dir"
 ynh_restore_file --origin_path="/etc/wireguard"
 
 #=================================================
 # RECREATE THE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Recreating the dedicated system user..." --weight=1
+#REMOVEME? ynh_script_progression --message="Recreating the dedicated system user..." --weight=1
 
 # Create the dedicated user (if not existing)
-ynh_system_user_create --username=$app
+#REMOVEME? ynh_system_user_create --username=$app
 
 #=================================================
 # RESTORE USER RIGHTS
 #=================================================
 
 # Restore permissions on app files
-chmod 750 "$final_path"
-chmod -R o-rwx "$final_path"
-chown -R $app: "$final_path"
+chmod 750 "$install_dir"
+chmod -R o-rwx "$install_dir"
+chown -R $app: "$install_dir"
 
 chmod 750 /etc/wireguard
 chmod -R o-rwx /etc/wireguard
@@ -83,9 +83,9 @@ chown -R $app: /etc/wireguard
 #=================================================
 # REINSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Reinstalling dependencies..." --weight=5
+#REMOVEME? ynh_script_progression --message="Reinstalling dependencies..." --weight=5
 
-ynh_install_app_dependencies "$pkg_dependencies"
+#REMOVEME? ynh_install_app_dependencies "$pkg_dependencies"
 
 #=================================================
 # RESTORE SYSTEMD
@@ -122,7 +122,7 @@ yunohost service add wireguard_ui --description="WireGuard UI"
 # RESTORE VARIOUS FILES
 #=================================================
 
-ynh_restore_file --origin_path=$(jq -r ".config_file_path" $final_path/db/server/global_settings.json) --not_mandatory
+ynh_restore_file --origin_path=$(jq -r ".config_file_path" $install_dir/db/server/global_settings.json) --not_mandatory
 
 #=================================================
 # START UI SYSTEMD SERVICE
