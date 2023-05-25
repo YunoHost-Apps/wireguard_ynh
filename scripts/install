@@ -24,66 +24,20 @@ source /usr/share/yunohost/helpers
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
 
-#REMOVEME? domain=$YNH_APP_ARG_DOMAIN
-path="/"
-#REMOVEME? admin=$YNH_APP_ARG_ADMIN
-architecture=$YNH_ARCH
-
-#REMOVEME? app=$YNH_APP_INSTANCE_NAME
-
-#=================================================
-# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
-#=================================================
-#REMOVEME? ynh_script_progression --message="Validating installation parameters..." --weight=1
-
-#REMOVEME? install_dir=/opt/yunohost/$app
-#REMOVEME? test ! -e "$install_dir" || ynh_die --message="This path already contains a folder"
-
-# Register (book) web path
-#REMOVEME? ynh_webpath_register --app=$app --domain=$domain --path=$path
+interface=$(ip route | awk '/default/ { print $5 }' | head -n1)
+main_domain=$(cat /etc/yunohost/current_host)
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
-#REMOVEME? ynh_script_progression --message="Storing installation settings..." --weight=1
 
-#REMOVEME? ynh_app_setting_set --app=$app --key=domain --value=$domain
-#REMOVEME? ynh_app_setting_set --app=$app --key=path --value=$path
-#REMOVEME? ynh_app_setting_set --app=$app --key=admin --value=$admin
 ynh_app_setting_set --app=$app --key=interface --value=$interface
-
-#=================================================
-# STANDARD MODIFICATIONS
-#=================================================
-# FIND AND OPEN A PORT
-#=================================================
-#REMOVEME? ynh_script_progression --message="Finding an available port..." --weight=1
-
-# Find an available port for WireGuard
-#REMOVEME? port_wg=$(ynh_find_port --port=8095)
-#REMOVEME? ynh_app_setting_set --app=$app --key=port_wg --value=$port_wg
-
-# Find an available port for WireGuard UI
-#REMOVEME? port=$(ynh_find_port --port=$(($port_wg+1)))
-#REMOVEME? ynh_app_setting_set --app=$app --key=port --value=$port
-
-# Open the WireGuard port
-ynh_script_progression --message="Configuring firewall..." --weight=1
-ynh_exec_warn_less yunohost firewall allow --no-upnp UDP $port_wg
-
-#=================================================
-# INSTALL DEPENDENCIES
-#=================================================
-#REMOVEME? ynh_script_progression --message="Installing dependencies..." --weight=7
-
-#REMOVEME? ynh_install_app_dependencies "$pkg_dependencies"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=1
 
-#REMOVEME? ynh_app_setting_set --app=$app --key=install_dir --value=$install_dir
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir" 
 
@@ -94,14 +48,6 @@ ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
-
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-#REMOVEME? ynh_script_progression --message="Configuring system user..." --weight=1
-
-# Create a system user
-#REMOVEME? ynh_system_user_create --username=$app
 
 #=================================================
 # SPECIFIC SETUP
@@ -175,20 +121,6 @@ ynh_script_progression --message="Starting the systemd service for the UI..." --
 
 # Start a systemd service
 ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
-
-#=================================================
-# SETUP SSOWAT
-#=================================================
-#REMOVEME? ynh_script_progression --message="Configuring permissions..." --weight=1
-
-#REMOVEME? ynh_permission_update --permission="main" --remove="all_users" --add="$admin"
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-#REMOVEME? ynh_script_progression --message="Reloading NGINX web server..." --weight=1
-
-#REMOVEME? ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT

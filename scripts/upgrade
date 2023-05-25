@@ -29,46 +29,11 @@ architecture=$YNH_ARCH
 
 upgrade_type=$(ynh_check_app_version_changed)
 
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-#REMOVEME? ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=1
-
-# Backup the current version of the app
-#REMOVEME? ynh_backup_before_upgrade
-#REMOVEME? ynh_clean_setup () {
-	# restore it if the upgrade fails
-#REMOVEME? 	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-#REMOVEME? ynh_abort_if_errors
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
-
-# If install_dir doesn't exist, create it
-if [ -z "$install_dir" ]; then
-#REMOVEME? 	install_dir=/opt/yunohost/$app
-#REMOVEME? 	ynh_app_setting_set --app=$app --key=install_dir --value=$install_dir
-fi
-
-# Change port if WireGuard port is the same as WireGuard UI's
-if [ $port -eq $port_wg ]
-then
-	ynh_app_setting_delete --app=$app --key=port
-#REMOVEME? 	port=$(ynh_find_port --port=$(($port_wg+1)))
-#REMOVEME? 	ynh_app_setting_set --app=$app --key=port --value=$port
-	# Let's remove the unused is_public key too
-	ynh_app_setting_delete --app=$app --key=is_public
-fi
-
-# WireGuard UI should be private, really.
-if ynh_permission_has_user --permission=main --user=visitors
-then
-#REMOVEME?         ynh_permission_update --permission=main --remove=visitors
-fi
 
 # Drop sudoers file if present
 if [ -f "/etc/sudoers.d/${app}_ynh" ]; then
@@ -130,21 +95,6 @@ ynh_script_progression --message="Upgrading NGINX web server configuration..." -
 ynh_add_nginx_config
 
 #=================================================
-# UPGRADE DEPENDENCIES
-#=================================================
-#REMOVEME? ynh_script_progression --message="Upgrading dependencies..." --weight=7
-
-#REMOVEME? ynh_install_app_dependencies "$pkg_dependencies"
-
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-#REMOVEME? ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
-
-# Create a dedicated user (if not existing)
-#REMOVEME? ynh_system_user_create --username=$app
-
-#=================================================
 # SETUP SYSTEMD
 #=================================================
 ynh_script_progression --message="Upgrading systemd configuration..." --weight=1
@@ -197,13 +147,6 @@ ynh_script_progression --message="Starting the systemd service for the UI..." --
 
 # Start a systemd service
 ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-ynh_script_progression --message="Reloading nginx web server..." --weight=1
-
-#REMOVEME? ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
