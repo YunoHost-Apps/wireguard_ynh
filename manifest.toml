@@ -44,6 +44,12 @@ ram.runtime = "50M"
         i386.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.5.0/wireguard-ui-v0.5.0-linux-386.tar.gz"
         i386.sha256 = "595493c3a197049d0f02ad15c01080456e1f7ea23a8eaf0d05b51f7ce35875e2"
 
+        autoupdate.strategy = "latest_github_release"
+        autoupdate.asset.arm64 = ".*-arm64.tar.gz"
+        autoupdate.asset.amd64 = ".*-amd64.tar.gz"
+        autoupdate.asset.armhf = ".*-arm.tar.gz"
+        autoupdate.asset.i386 = ".*-386.tar.gz"
+
     [resources.ports]
     main.default = 8096
     wg.default = 8095
