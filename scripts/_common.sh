@@ -4,13 +4,6 @@
 # COMMON VARIABLES
 #=================================================
 
-interface=$(ip route | awk '/default/ { print $5 }' | head -n1)
-
-main_domain=$(cat /etc/yunohost/current_host)
-
-# dependencies used by the app
-pkg_dependencies="wireguard"
-
 #=================================================
 # PERSONAL HELPERS
 #=================================================
@@ -42,7 +35,7 @@ ynh_send_readme_to_admin() {
 	type="${type:-install}"
 
 	# Get the value of admin_mail_html
-	admin_mail_html=$(ynh_app_setting_get $app admin_mail_html)
+#REMOVEME? 	admin_mail_html=$(ynh_app_setting_get $app admin_mail_html)
 	admin_mail_html="${admin_mail_html:-0}"
 
 	# Retrieve the email of users

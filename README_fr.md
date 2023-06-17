@@ -18,24 +18,11 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
 
 WireGuard® is fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec. It intends to be considerably more performant than OpenVPN. WireGuard is designed as a general purpose VPN.
 
-**Version incluse :** 0.4.0~ynh1
+**Version incluse :** 0.5.0~ynh1
 
 ## Captures d’écran
 
 ![Capture d’écran de WireGuard](./doc/screenshots/screenshot.png)
-![Capture d’écran de WireGuard](./doc/screenshots/screenshot.png:Zone.Identifier)
-
-## Avertissements / informations importantes
-
-* Cette application ajoutera un module DMKS à votre noyau Linux.
-  * Vous devriez redémarrer votre serveur pour que WireGuard puisse se lancer.
-* Cette application inclut WireGuard et une interface web non-officielle pour le configurer.
-  * Ne modifiez pas les fichiers de configuration à la main.
-* Utiliser le panneau de permissions de YunoHost pour autoriser des utilisateurs à accéder à WireGuard UI.
-* Une seule interface réseau, *wg0*, peut actuellement être gérée par cette app.
-* La page `Status` demeure non fonctionnelle pour l'instant.
-
-Après installation, vous devrez cliquer sur `Apply Config` une fois dans l'UI avant que le service VPN puisse être démarré.
 
 ## Documentations et ressources
 

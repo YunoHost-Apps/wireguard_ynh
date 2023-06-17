@@ -1,0 +1,61 @@
+packaging_format = 2
+
+id = "wireguard"
+name = "WireGuard"
+description.en = "Fast and modern VPN server, including a configuration webapp"
+description.fr = "Serveur VPN rapide et moderne, incluant une webapp pour le configurer"
+
+version = "0.5.0~ynh1"
+
+maintainers = ["tituspijean"]
+
+[upstream]
+license = "MIT"
+website = "https://www.wireguard.com/"
+code = "https://github.com/ngoduykhanh/wireguard-ui"
+
+[integration]
+yunohost = ">= 11.1.19"
+architectures = "all"
+multi_instance = false
+ldap = false
+sso = false
+disk = "50M"
+ram.build = "50M"
+ram.runtime = "50M"
+
+[install]
+    [install.domain]
+    type = "domain"
+    full_domain = true
+
+    [install.admin]
+    type = "user"
+
+[resources]
+        [resources.sources.main]
+        in_subdir = false
+        arm64.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.5.0/wireguard-ui-v0.5.0-linux-arm64.tar.gz"
+        arm64.sha256 = "1a49f6cfc6b3abfe0c4a0ce5998e0f82c29cd59735c8fa3bdbf05ef1d2087224"
+        amd64.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.5.0/wireguard-ui-v0.5.0-linux-amd64.tar.gz"
+        amd64.sha256 = "fd974152d57a8fba9f9797c3ef1d330542639cb8863c36e99782152de0e17460"
+        armhf.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.5.0/wireguard-ui-v0.5.0-linux-arm.tar.gz"
+        armhf.sha256 = "0695da19fe9348048d0700dccead116bf7b59436dd5ccbc8c9bdc232315bac4d"
+        i386.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.5.0/wireguard-ui-v0.5.0-linux-386.tar.gz"
+        i386.sha256 = "595493c3a197049d0f02ad15c01080456e1f7ea23a8eaf0d05b51f7ce35875e2"
+
+    [resources.ports]
+    main.default = 8096
+    wg.default = 8095
+    wg.exposed = "UDP"
+
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.permissions]
+    main.url = "/"
+    main.allowed = "admins"
+
+    [resources.apt]
+    packages = "wireguard"
