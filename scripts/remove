@@ -34,6 +34,9 @@ fi
 #=================================================
 ynh_script_progression --message="Stopping and removing the systemd service..." --weight=1
 
+# Stop wg-quick service
+systemctl stop wg-quick@wg0
+
 # YunoHost does not handle services not ending with .service, let's remove it manually
 systemctl stop wireguard@wg0.path
 systemctl disable wireguard@wg0.path --quiet
