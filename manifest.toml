@@ -28,9 +28,6 @@ ram.runtime = "50M"
     [install.domain]
     type = "domain"
 
-    [install.admin]
-    type = "user"
-
 [resources]
         [resources.sources.main]
         in_subdir = false
