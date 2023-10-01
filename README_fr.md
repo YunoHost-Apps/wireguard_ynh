@@ -29,7 +29,6 @@ WireGuard® est un VPN rapide et moderne qui utilise une cryptographie de pointe
 
 * Site officiel de l’app : <https://www.wireguard.com/>
 * Dépôt de code officiel de l’app : <https://github.com/ngoduykhanh/wireguard-ui>
-* Documentation YunoHost pour cette app : <https://yunohost.org/app_wireguard>
 * Signaler un bug : <https://github.com/YunoHost-Apps/wireguard_ynh/issues>
 
 ## Informations pour les développeurs
