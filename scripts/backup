@@ -45,7 +45,7 @@ ynh_backup --src_path=/etc/systemd/system/wireguard@.service
 ynh_backup --src_path="/etc/wireguard"
 
 # Backing up specific config file, in case of it is not in /etc/wireguard
-ynh_backup --src_path="$(jq -r ".config_file_path" $install_dir/db/server/global_settings.json)" --not_mandatory
+ynh_backup --src_path="$(jq -r 'select(.config_file_path | startswith("/etc/wireguard/") | not) | .config_file_path' $install_dir/db/server/global_settings.json)" --not_mandatory
 
 # Backup the sysctl config file to enable port forwarding
 ynh_backup --src_path="/etc/sysctl.d/$app.conf"
