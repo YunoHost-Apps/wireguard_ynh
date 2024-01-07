@@ -5,7 +5,7 @@ name = "WireGuard"
 description.en = "Fast and modern VPN server, including a configuration webapp"
 description.fr = "Serveur VPN rapide et moderne, incluant une webapp pour le configurer"
 
-version = "0.5.2~ynh2"
+version = "0.6.2~ynh1"
 
 maintainers = ["tituspijean"]
 
@@ -31,14 +31,14 @@ ram.runtime = "50M"
 [resources]
         [resources.sources.main]
         in_subdir = false
-        arm64.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.5.2/wireguard-ui-v0.5.2-linux-arm64.tar.gz"
-        arm64.sha256 = "024eb6da74f450a0f2715cc233573b714fdba14dbf9fd229ed1479bbd4e83ea6"
-        amd64.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.5.2/wireguard-ui-v0.5.2-linux-amd64.tar.gz"
-        amd64.sha256 = "f1f13fbc548cd28bf41e9517ccb2e3564f4d9f893d174bfa20f7a61d18e954c5"
-        armhf.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.5.2/wireguard-ui-v0.5.2-linux-arm.tar.gz"
-        armhf.sha256 = "b15c8ff43d09fa1d63aa63aa185a8a5b9f4ece02ebf67e9aa5152888d4a6be6b"
-        i386.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.5.2/wireguard-ui-v0.5.2-linux-386.tar.gz"
-        i386.sha256 = "60e2f0005f60b01e10feb65941fa2ad6e919cde1d8004eaacca713a4cea0ee7d"
+        arm64.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.6.2/wireguard-ui-v0.6.2-linux-arm64.tar.gz"
+        arm64.sha256 = "4d40cdd135381faacb8d09c8046512ecb7a37e9b8cbd58f86022d8dd093de23b"
+        amd64.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.6.2/wireguard-ui-v0.6.2-linux-amd64.tar.gz"
+        amd64.sha256 = "2769536c2ef4cc3630b209675167afd5f199f4cc9f9f0d22ce492592dc1dc68d"
+        armhf.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.6.2/wireguard-ui-v0.6.2-linux-arm.tar.gz"
+        armhf.sha256 = "8d8421557d857bd1af548c2e7951afe46f87c0b654b9d5c01d78e09e155b456f"
+        i386.url = "https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.6.2/wireguard-ui-v0.6.2-linux-386.tar.gz"
+        i386.sha256 = "3945ce5c4a9210c2cb570dadff3ac73d1de7d26c6ac6dc8a20dfcf66e4051e49"
 
         autoupdate.strategy = "latest_github_release"
         autoupdate.asset.arm64 = ".*-linux-arm64.tar.gz"
