@@ -42,6 +42,10 @@ CapabilityBoundingSet=~CAP_MAC_ADMIN CAP_MAC_OVERRIDE
 #CapabilityBoundingSet=~CAP_NET_ADMIN CAP_NET_BROADCAST CAP_NET_RAW
 CapabilityBoundingSet=~CAP_SYS_ADMIN CAP_SYS_PTRACE CAP_SYSLOG 
 
+# Allowing this capabilities to display devices in "Connected peers" page
+CapabilityBoundingSet=CAP_DAC_READ_SEARCH CAP_NET_ADMIN CAP_NET_RAW
+AmbientCapabilities=CAP_DAC_READ_SEARCH CAP_NET_ADMIN CAP_NET_RAW
+
 # Exception to ProtectSystem
 ReadWritePaths=/etc/wireguard
 
