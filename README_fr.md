@@ -19,7 +19,7 @@ Il NE doit PAS être modifié à la main.
 WireGuard® est un VPN rapide et moderne qui utilise une cryptographie de pointe. Il vise à être plus rapide, plus simple, plus léger et plus utile qu'IPsec. Il a l'intention d'être considérablement plus performant qu'OpenVPN. WireGuard est conçu comme un VPN à usage général.
 
 
-**Version incluse :** 0.6.2~ynh1
+**Version incluse :** 0.6.2~ynh2
 
 ## Captures d’écran
 
