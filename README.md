@@ -9,16 +9,16 @@ It shall NOT be edited by hand.
 
 [![Install WireGuard with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 
-*[Lire ce readme en français.](./README_fr.md)*
+*[Read this README in other languages.](./ALL_README.md)*
 
-> *This package allows you to install WireGuard quickly and simply on a YunoHost server.
-If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/install) to learn how to install it.*
+> *This package allows you to install WireGuard quickly and simply on a YunoHost server.*  
+> *If you don't have YunoHost, please consult [the guide](https://yunohost.org/install) to learn how to install it.*
 
 ## Overview
 
 WireGuard® is fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec. It intends to be considerably more performant than OpenVPN. WireGuard is designed as a general purpose VPN.
 
-**Shipped version:** 0.6.2~ynh1
+**Shipped version:** 0.6.2~ynh2
 
 ## Screenshots
 
@@ -26,18 +26,18 @@ WireGuard® is fast and modern VPN that utilizes state-of-the-art cryptography. 
 
 ## Documentation and resources
 
-* Official app website: <https://www.wireguard.com/>
-* Upstream app code repository: <https://github.com/ngoduykhanh/wireguard-ui>
-* YunoHost Store: <https://apps.yunohost.org/app/wireguard>
-* Report a bug: <https://github.com/YunoHost-Apps/wireguard_ynh/issues>
+- Official app website: <https://www.wireguard.com/>
+- Upstream app code repository: <https://github.com/ngoduykhanh/wireguard-ui>
+- YunoHost Store: <https://apps.yunohost.org/app/wireguard>
+- Report a bug: <https://github.com/YunoHost-Apps/wireguard_ynh/issues>
 
 ## Developer info
 
-Please send your pull request to the [testing branch](https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing).
+Please send your pull request to the [`testing` branch](https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing).
 
-To try the testing branch, please proceed like that.
+To try the `testing` branch, please proceed like that:
 
-``` bash
+```bash
 sudo yunohost app install https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
 or
 sudo yunohost app upgrade wireguard -u https://github.com/YunoHost-Apps/wireguard_ynh/tree/testing --debug
