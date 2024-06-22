@@ -3,7 +3,7 @@
 请勿手动编辑。
 -->
 
-# YunoHost 的 WireGuard
+# YunoHost 上的 WireGuard
 
 [![集成程度](https://dash.yunohost.org/integration/wireguard.svg)](https://dash.yunohost.org/appci/app/wireguard) ![工作状态](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
 
