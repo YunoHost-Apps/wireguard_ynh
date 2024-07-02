@@ -5,13 +5,13 @@ No se debe editar a mano.
 
 # WireGuard Server para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/wireguard.svg)](https://dash.yunohost.org/appci/app/wireguard) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
+[![Nivel de integración](https://dash.yunohost.org/integration/wireguard.svg)](https://ci-apps.yunohost.org/ci/apps/wireguard/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
 
 [![Instalar WireGuard Server con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 
 *[Leer este README en otros idiomas.](./ALL_README.md)*
 
-> *Este paquete le permite instalarWireGuard rapidamente y simplement en un servidor YunoHost.*  
+> *Este paquete le permite instalarWireGuard Server rapidamente y simplement en un servidor YunoHost.*  
 > *Si no tiene YunoHost, visita [the guide](https://yunohost.org/install) para aprender como instalarla.*
 
 ## Descripción general
