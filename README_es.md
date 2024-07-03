@@ -3,26 +3,29 @@ Este archivo README esta generado automaticamente<https://github.com/YunoHost/ap
 No se debe editar a mano.
 -->
 
-# WireGuard para Yunohost
+# WireGuard Server para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/wireguard.svg)](https://dash.yunohost.org/appci/app/wireguard) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
+[![Nivel de integración](https://dash.yunohost.org/integration/wireguard.svg)](https://ci-apps.yunohost.org/ci/apps/wireguard/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
 
-[![Instalar WireGuard con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
+[![Instalar WireGuard Server con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 
 *[Leer este README en otros idiomas.](./ALL_README.md)*
 
-> *Este paquete le permite instalarWireGuard rapidamente y simplement en un servidor YunoHost.*  
+> *Este paquete le permite instalarWireGuard Server rapidamente y simplement en un servidor YunoHost.*  
 > *Si no tiene YunoHost, visita [the guide](https://yunohost.org/install) para aprender como instalarla.*
 
 ## Descripción general
 
 WireGuard® is fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec. It intends to be considerably more performant than OpenVPN. WireGuard is designed as a general purpose VPN.
 
-**Versión actual:** 0.6.2~ynh2
+This package includes an administration interface for WireGuard, which makes it more of a VPN server. Even though WireGuard can be peer-to-peer, this is not how this package configures it.
+
+
+**Versión actual:** 0.6.2~ynh3
 
 ## Capturas
 
-![Captura de WireGuard](./doc/screenshots/screenshot.png)
+![Captura de WireGuard Server](./doc/screenshots/screenshot.png)
 
 ## Documentaciones y recursos
 

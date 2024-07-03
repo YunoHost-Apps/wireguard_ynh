@@ -3,26 +3,29 @@
 请勿手动编辑。
 -->
 
-# YunoHost 上的 WireGuard
+# YunoHost 上的 WireGuard Server
 
-[![集成程度](https://dash.yunohost.org/integration/wireguard.svg)](https://dash.yunohost.org/appci/app/wireguard) ![工作状态](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
+[![集成程度](https://dash.yunohost.org/integration/wireguard.svg)](https://ci-apps.yunohost.org/ci/apps/wireguard/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
 
-[![使用 YunoHost 安装 WireGuard](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
+[![使用 YunoHost 安装 WireGuard Server](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 
 *[阅读此 README 的其它语言版本。](./ALL_README.md)*
 
-> *通过此软件包，您可以在 YunoHost 服务器上快速、简单地安装 WireGuard。*  
+> *通过此软件包，您可以在 YunoHost 服务器上快速、简单地安装 WireGuard Server。*  
 > *如果您还没有 YunoHost，请参阅[指南](https://yunohost.org/install)了解如何安装它。*
 
 ## 概况
 
 WireGuard® is fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec. It intends to be considerably more performant than OpenVPN. WireGuard is designed as a general purpose VPN.
 
-**分发版本：** 0.6.2~ynh2
+This package includes an administration interface for WireGuard, which makes it more of a VPN server. Even though WireGuard can be peer-to-peer, this is not how this package configures it.
+
+
+**分发版本：** 0.6.2~ynh3
 
 ## 截图
 
-![WireGuard 的截图](./doc/screenshots/screenshot.png)
+![WireGuard Server 的截图](./doc/screenshots/screenshot.png)
 
 ## 文档与资源
 
