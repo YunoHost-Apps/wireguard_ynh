@@ -1,93 +1,81 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# CHECK VERSION
-#=================================================
-
-upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
-ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
+ynh_script_progression "Ensuring downward compatibility..."
 
 # Drop sudoers file if present
 if [ -f "/etc/sudoers.d/${app}_ynh" ]; then
-	ynh_secure_remove /etc/sudoers.d/${app}_ynh
+	ynh_safe_rm /etc/sudoers.d/${app}_ynh
 fi
 
 # Remove deprecated services
 if systemctl list-units --full -all | grep -Fq "wireguard_ui_conf.path"; then
 	systemctl disable --now --quiet wireguard_ui_conf.path
-	ynh_secure_remove --file="/etc/systemd/system/wireguard_ui_conf.path"
+	ynh_safe_rm "/etc/systemd/system/wireguard_ui_conf.path"
 fi
 if systemctl list-units --full -all | grep -Fq "wireguard_ui_conf.service"; then
 	systemctl disable --now --quiet wireguard_ui_conf.service
-	ynh_secure_remove --file="/etc/systemd/system/wireguard_ui_conf.service"
+	ynh_safe_rm "/etc/systemd/system/wireguard_ui_conf.service"
 fi
 
 # Remove the service integration from an older version
-if ynh_exec_warn_less yunohost service status wireguard@wg0 >/dev/null
+if ynh_hide_warnings yunohost service status wireguard@wg0 >/dev/null
 then
 	yunohost service remove wireguard@wg0
 fi
 
 #=================================================
-# STANDARD UPGRADE STEPS
-#=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Stopping a systemd service..." --weight=1
+ynh_script_progression "Stopping $app's systemd service..."
 
-ynh_systemd_action --service_name=wireguard_ui --action="stop" --line_match="Stopped WireGuard UI" --log_path="systemd" --timeout=30
-ynh_systemd_action --service_name=wg-quick@wg0 --action="stop"
+ynh_systemctl --service=wireguard_ui --action="stop" --wait_until="Stopped WireGuard UI" --log_path="systemd" --timeout=30
+ynh_systemctl --service=wg-quick@wg0 --action="stop"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
+# FIXME: this is still supported but the recommendation is now to *always* re-setup the app sources wether or not the upstream sources changed
+if ynh_app_upstream_version_changed
 then
-	ynh_script_progression --message="Upgrading source files..." --weight=1
+	ynh_script_progression "Upgrading source files..."
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$install_dir" 
+	ynh_setup_source --dest_dir="$install_dir"
+
 fi
 
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
-ynh_script_progression --message="Updating a configuration file..." --weight=1
+ynh_script_progression "Updating configuration..."
 
 main_domain=$(cat /etc/yunohost/current_host)
 
 # Update configuration for the Web UI
-ynh_add_config --template="../conf/wireguard-ui.env" --destination="$install_dir/wireguard-ui.env"
+ynh_config_add --template="wireguard-ui.env" --destination="$install_dir/wireguard-ui.env"
 
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=1
+ynh_script_progression "Upgrading NGINX web server configuration..."
 
 # Create a dedicated nginx config
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 #=================================================
 # SETUP SYSTEMD
 #=================================================
-ynh_script_progression --message="Upgrading systemd configuration..." --weight=1
+ynh_script_progression "Upgrading systemd configuration..."
 
 # Create a dedicated systemd config for the web UI
-ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service
+ynh_config_add_systemd --service=wireguard_ui --template=wireguard_ui.service
 
 # Create dedicated systemd configs for starting and monitoring WireGuard's configuration
 cp ../conf/wireguard@.service /etc/systemd/system/wireguard@.service
@@ -99,22 +87,19 @@ systemctl enable --quiet --now wireguard@wg0.path
 #=================================================
 # ENABLE PORT FORWARDING
 #=================================================
-ynh_script_progression --message="Enabling port forwarding..." --weight=1
+ynh_script_progression "Enabling port forwarding..."
 
-ynh_add_config --template="../conf/sysctl.conf" --destination="/etc/sysctl.d/$app.conf"
+ynh_config_add --template="sysctl.conf" --destination="/etc/sysctl.d/$app.conf"
 sysctl -p /etc/sysctl.d/$app.conf
 
-#=================================================
-# GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
 # Set permissions to app files
-chmod 750 "$install_dir"
-chmod -R o-rwx "$install_dir"
-chown -R $app: "$install_dir"
-
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 750 "$install_dir"
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -R o-rwx "$install_dir"
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app: "$install_dir"
 chmod 750 /etc/wireguard
 chmod -R o-rwx /etc/wireguard
 chown -R $app: /etc/wireguard
@@ -122,7 +107,7 @@ chown -R $app: /etc/wireguard
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
-ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
+ynh_script_progression "Integrating service in YunoHost..."
 
 yunohost service add wg-quick@wg0 --description="WireGuard VPN" --needs_exposed_ports="$port_wg" --test_status="wg show | grep wg0"
 yunohost service add wireguard_ui --description="WireGuard UI"
@@ -130,13 +115,13 @@ yunohost service add wireguard_ui --description="WireGuard UI"
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting the systemd service for the UI..." --weight=1
+ynh_script_progression "Starting the systemd service for the UI..."
 
 # Start a systemd service
-ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
+ynh_systemctl --service=wireguard_ui --action="start" --wait_until="http server started" --log_path="systemd" --timeout=30
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed. You may need to reboot your server before being able to start the WireGuard service." --last
+ynh_script_progression "Upgrade of $app completed. You may need to reboot your server before being able to start the WireGuard service."

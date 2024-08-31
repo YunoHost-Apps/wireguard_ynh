@@ -1,11 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -17,22 +11,22 @@ source /usr/share/yunohost/helpers
 
 # Remove the services from the list of services known by Yunohost (added from `yunohost service add`)
 
-if ynh_exec_warn_less yunohost service status wireguard_ui >/dev/null
+if ynh_hide_warnings yunohost service status wireguard_ui >/dev/null
 then
-	ynh_script_progression --message="Removing WireGuard UI service integration..." --weight=1
+	ynh_script_progression "Removing WireGuard UI service integration..."
 	yunohost service remove wireguard_ui
 fi
 
-if ynh_exec_warn_less yunohost service status wg-quick@wg0 >/dev/null
+if ynh_hide_warnings yunohost service status wg-quick@wg0 >/dev/null
 then
-	ynh_script_progression --message="Removing WireGuard service integration..." --weight=1
+	ynh_script_progression "Removing WireGuard service integration..."
 	yunohost service remove wg-quick@wg0
 fi
 
 #=================================================
 # STOP AND REMOVE SERVICE
 #=================================================
-ynh_script_progression --message="Stopping and removing the systemd service..." --weight=1
+ynh_script_progression "Stopping and removing the systemd service..."
 
 # Stop wg-quick service
 systemctl stop wg-quick@wg0
@@ -40,37 +34,37 @@ systemctl stop wg-quick@wg0
 # YunoHost does not handle services not ending with .service, let's remove it manually
 systemctl stop wireguard@wg0.path
 systemctl disable wireguard@wg0.path --quiet
-ynh_secure_remove --file="/etc/systemd/system/wireguard@.path"
+ynh_safe_rm "/etc/systemd/system/wireguard@.path"
 
 systemctl stop wireguard@wg0.service
 systemctl disable wireguard@wg0.service --quiet
-ynh_secure_remove --file="/etc/systemd/system/wireguard@.service"
+ynh_safe_rm "/etc/systemd/system/wireguard@.service"
 
-ynh_remove_systemd_config --service=wireguard_ui
+ynh_config_remove_systemdwireguard_ui
 
 #=================================================
 # REMOVE APP MAIN DIR
 #=================================================
-ynh_script_progression --message="Removing app main directory..." --weight=1
+ynh_script_progression "Removing app main directory..."
 
 # Remove WireGuard configuration directory securely
-ynh_secure_remove --file="/etc/wireguard"
+ynh_safe_rm "/etc/wireguard"
 
 #=================================================
 # REMOVE NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Removing NGINX web server configuration..." --weight=1
+ynh_script_progression "Removing NGINX web server configuration..."
 
 # Remove the dedicated nginx config
-ynh_remove_nginx_config
+ynh_config_remove_nginx
 
 #=================================================
 # REMOVE LOGROTATE CONFIGURATION
 #=================================================
-ynh_script_progression --message="Removing logrotate configuration..." --weight=1
+ynh_script_progression "Removing logrotate configuration..."
 
 # Remove the app-specific logrotate config
-ynh_remove_logrotate
+ynh_config_remove_logrotate
 
 #=================================================
 # SPECIFIC REMOVE
@@ -79,13 +73,13 @@ ynh_remove_logrotate
 #=================================================
 
 # Remove sudoers file
-ynh_secure_remove --file="/etc/sudoers.d/${app}_ynh"
+ynh_safe_rm "/etc/sudoers.d/${app}_ynh"
 
 # Remove sysctl file for port forwarding
-ynh_secure_remove --file="/etc/sysctl.d/$app.conf"
+ynh_safe_rm "/etc/sysctl.d/$app.conf"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Removal of $app completed" --last
+ynh_script_progression "Removal of $app completed"

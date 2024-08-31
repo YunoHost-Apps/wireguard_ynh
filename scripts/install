@@ -1,11 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -20,12 +14,12 @@ main_domain=$(cat /etc/yunohost/current_host)
 # STORE SETTINGS FROM MANIFEST
 #=================================================
 
-ynh_app_setting_set --app=$app --key=interface --value=$interface
+ynh_app_setting_set --key=interface --value=$interface
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --weight=1
+ynh_script_progression "Setting up source files..."
 
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
@@ -33,10 +27,10 @@ ynh_setup_source --dest_dir="$install_dir"
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring NGINX web server..." --weight=1
+ynh_script_progression "Configuring NGINX web server..."
 
 # Create a dedicated nginx config
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 #=================================================
 # SPECIFIC SETUP
@@ -48,11 +42,11 @@ ynh_add_nginx_config
 mkdir -p $install_dir/db/server
 
 # Add interface configuration file for the Web UI
-ynh_add_config --template="../conf/interfaces.json" --destination="$install_dir/db/server/interfaces.json"
-ynh_delete_file_checksum --file="$install_dir/db/server/interfaces.json"
+ynh_config_add --template="interfaces.json" --destination="$install_dir/db/server/interfaces.json"
+ynh_delete_file_checksum "$install_dir/db/server/interfaces.json"
 
 # Add configuration for the Web UI
-ynh_add_config --template="../conf/wireguard-ui.env" --destination="$install_dir/wireguard-ui.env"
+ynh_config_add --template="wireguard-ui.env" --destination="$install_dir/wireguard-ui.env"
 
 # Create WireGuard configuration directory
 mkdir -p /etc/wireguard
@@ -60,10 +54,10 @@ mkdir -p /etc/wireguard
 #=================================================
 # SETUP SYSTEMD
 #=================================================
-ynh_script_progression --message="Configuring a systemd service..." --weight=1
+ynh_script_progression "Configuring $app's systemd service..."
 
 # Create a dedicated systemd config for the web UI
-ynh_add_systemd_config --service=wireguard_ui --template=wireguard_ui.service
+ynh_config_add_systemd --service=wireguard_ui --template=wireguard_ui.service
 
 # Create dedicated systemd configs for starting and monitoring WireGuard's configuration
 cp ../conf/wireguard@.service /etc/systemd/system/wireguard@.service
@@ -75,22 +69,19 @@ systemctl enable --quiet --now wireguard@wg0.path
 #=================================================
 # ENABLE PORT FORWARDING
 #=================================================
-ynh_script_progression --message="Enabling port forwarding..." --weight=1
+ynh_script_progression "Enabling port forwarding..."
 
-ynh_add_config --template="../conf/sysctl.conf" --destination="/etc/sysctl.d/$app.conf"
+ynh_config_add --template="sysctl.conf" --destination="/etc/sysctl.d/$app.conf"
 sysctl -p /etc/sysctl.d/$app.conf
 
-#=================================================
-# GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
 # Set permissions to app files
-chmod 750 "$install_dir"
-chmod -R o-rwx "$install_dir"
-chown -R $app: "$install_dir"
-
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 750 "$install_dir"
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -R o-rwx "$install_dir"
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app: "$install_dir"
 chmod 750 /etc/wireguard
 chmod -R o-rwx /etc/wireguard
 chown -R $app: /etc/wireguard
@@ -98,7 +89,7 @@ chown -R $app: /etc/wireguard
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
-ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
+ynh_script_progression "Integrating service in YunoHost..."
 
 yunohost service add wg-quick@wg0 --description="WireGuard VPN" --needs_exposed_ports="$port_wg" --test_status="wg show | grep wg0"
 yunohost service add wireguard_ui --description="WireGuard UI"
@@ -106,13 +97,13 @@ yunohost service add wireguard_ui --description="WireGuard UI"
 #=================================================
 # START UI SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting the systemd service for the UI..." --weight=1
+ynh_script_progression "Starting the systemd service for the UI..."
 
 # Start a systemd service
-ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
+ynh_systemctl --service=wireguard_ui --action="start" --wait_until="http server started" --log_path="systemd" --timeout=30
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed. You may need to reboot your server before being able to start the WireGuard service." --last
+ynh_script_progression "Installation of $app completed. You may need to reboot your server before being able to start the WireGuard service."
