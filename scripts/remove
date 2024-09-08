@@ -4,12 +4,8 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# STANDARD REMOVE
-#=================================================
 # REMOVE SERVICE INTEGRATION IN YUNOHOST
 #=================================================
-
-# Remove the services from the list of services known by Yunohost (added from `yunohost service add`)
 
 if ynh_hide_warnings yunohost service status wireguard_ui >/dev/null
 then
@@ -55,19 +51,10 @@ ynh_safe_rm "/etc/wireguard"
 #=================================================
 ynh_script_progression "Removing NGINX web server configuration..."
 
-# Remove the dedicated nginx config
 ynh_config_remove_nginx
 
-#=================================================
-# REMOVE LOGROTATE CONFIGURATION
-#=================================================
-ynh_script_progression "Removing logrotate configuration..."
-
-# Remove the app-specific logrotate config
 ynh_config_remove_logrotate
 
-#=================================================
-# SPECIFIC REMOVE
 #=================================================
 # REMOVE VARIOUS FILES
 #=================================================
