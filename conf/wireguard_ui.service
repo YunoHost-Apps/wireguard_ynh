@@ -1,6 +1,6 @@
 [Unit]
 Description=WireGuard UI
-After=network.target wireguard.service
+After=network.target
 
 [Service]
 Type=simple
