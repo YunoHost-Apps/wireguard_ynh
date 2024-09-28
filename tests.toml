@@ -2,6 +2,11 @@ test_format = 1.0
 
 [default]
 
+    [default.curl_tests]
+    home.path = "/"
+    home.logged_on_sso = true
+    home.expect_title = "WireGuard Clients"
+
     # -------------------------------
     # Commits to test upgrade from
     # -------------------------------
