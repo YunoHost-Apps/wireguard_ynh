@@ -7,22 +7,13 @@ source /usr/share/yunohost/helpers
 # REMOVE SERVICE INTEGRATION IN YUNOHOST
 #=================================================
 
-if ynh_hide_warnings yunohost service status wireguard_ui >/dev/null
-then
-	ynh_script_progression "Removing WireGuard UI service integration..."
+if ynh_hide_warnings yunohost service status wireguard_ui >/dev/null; then
 	yunohost service remove wireguard_ui
 fi
 
-if ynh_hide_warnings yunohost service status wg-quick@wg0 >/dev/null
-then
-	ynh_script_progression "Removing WireGuard service integration..."
+if ynh_hide_warnings yunohost service status wg-quick@wg0 >/dev/null; then
 	yunohost service remove wg-quick@wg0
 fi
-
-#=================================================
-# STOP AND REMOVE SERVICE
-#=================================================
-ynh_script_progression "Stopping and removing the systemd service..."
 
 # Stop wg-quick service
 systemctl stop wg-quick@wg0
