@@ -118,4 +118,8 @@ ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="ht
 # Attempt to fix test idk x_x
 sleep 10
 
+systenctl status nginx --no-pager
+
+curl https://$domain$path --insecure -L -v
+
 ynh_script_progression --message="Installation of $app completed. You may need to reboot your server before being able to start the WireGuard service." --last
