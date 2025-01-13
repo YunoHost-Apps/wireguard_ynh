@@ -5,7 +5,9 @@ It shall NOT be edited by hand.
 
 # WireGuard Server for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/wireguard.svg)](https://ci-apps.yunohost.org/ci/apps/wireguard/) ![Working status](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
+[![Integration level](https://apps.yunohost.org/badge/integration/wireguard)](https://ci-apps.yunohost.org/ci/apps/wireguard/)
+![Working status](https://apps.yunohost.org/badge/state/wireguard)
+![Maintenance status](https://apps.yunohost.org/badge/maintained/wireguard)
 
 [![Install WireGuard Server with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 

@@ -5,7 +5,9 @@ EZ editatu eskuz.
 
 # WireGuard Server YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/wireguard.svg)](https://ci-apps.yunohost.org/ci/apps/wireguard/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
+[![Integrazio maila](https://apps.yunohost.org/badge/integration/wireguard)](https://ci-apps.yunohost.org/ci/apps/wireguard/)
+![Funtzionamendu egoera](https://apps.yunohost.org/badge/state/wireguard)
+![Mantentze egoera](https://apps.yunohost.org/badge/maintained/wireguard)
 
 [![Instalatu WireGuard Server YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 
