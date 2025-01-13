@@ -111,6 +111,10 @@ ynh_script_progression --message="Starting the systemd service for the UI..." --
 # Start a systemd service
 ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
 
+if [ ${PACKAGE_CHECK_EXEC:-0} -eq 1 ]; then
+	sleep 60
+fi
+
 #=================================================
 # END OF SCRIPT
 #=================================================
