@@ -23,7 +23,7 @@ WireGuard® est un VPN rapide et moderne qui utilise une cryptographie de pointe
 Ce package inclut une interface d'administration pour WireGuard, ce qui le fait être plutôt un serveur VPN. Bien que WireGuard puisse être pair-à-pair, ce n'est pas comment ce package le configure.
 
 
-**Version incluse :** 0.6.2~ynh3
+**Version incluse :** 0.6.2~ynh4
 
 ## Captures d’écran
 
