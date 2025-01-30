@@ -35,6 +35,12 @@ ynh_setup_source --dest_dir="$install_dir"
 #=================================================
 ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 
+if [ ${PACKAGE_CHECK_EXEC:-0} -eq 1 ]; then
+	package_check=true
+else
+	package_check=false
+fi
+
 # Create a dedicated nginx config
 ynh_add_nginx_config
 
