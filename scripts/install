@@ -99,7 +99,7 @@ chown -R $app: "$install_dir"
 
 chmod 750 /etc/wireguard
 chmod -R o-rwx /etc/wireguard
-chown -R $app: /etc/wireguard
+#chown -R $app: /etc/wireguard
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
