@@ -115,7 +115,7 @@ yunohost service add wireguard_ui --description="WireGuard UI"
 ynh_script_progression --message="Starting the systemd service for the UI..." --weight=1
 
 # Start a systemd service
-ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
+#ynh_systemd_action --service_name=wireguard_ui --action="start" --line_match="http server started" --log_path="systemd" --timeout=30
 
 #=================================================
 # END OF SCRIPT
