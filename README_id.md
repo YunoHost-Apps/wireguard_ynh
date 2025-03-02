@@ -5,7 +5,9 @@ Ini TIDAK boleh diedit dengan tangan.
 
 # WireGuard Server untuk YunoHost
 
-[![Tingkat integrasi](https://dash.yunohost.org/integration/wireguard.svg)](https://ci-apps.yunohost.org/ci/apps/wireguard/) ![Status kerja](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Status pemeliharaan](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
+[![Tingkat integrasi](https://apps.yunohost.org/badge/integration/wireguard)](https://ci-apps.yunohost.org/ci/apps/wireguard/)
+![Status kerja](https://apps.yunohost.org/badge/state/wireguard)
+![Status pemeliharaan](https://apps.yunohost.org/badge/maintained/wireguard)
 
 [![Pasang WireGuard Server dengan YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 

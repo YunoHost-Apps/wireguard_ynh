@@ -5,7 +5,9 @@
 
 # WireGuard Server для YunoHost
 
-[![Уровень интеграции](https://dash.yunohost.org/integration/wireguard.svg)](https://ci-apps.yunohost.org/ci/apps/wireguard/) ![Состояние работы](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Состояние сопровождения](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
+[![Уровень интеграции](https://apps.yunohost.org/badge/integration/wireguard)](https://ci-apps.yunohost.org/ci/apps/wireguard/)
+![Состояние работы](https://apps.yunohost.org/badge/state/wireguard)
+![Состояние сопровождения](https://apps.yunohost.org/badge/maintained/wireguard)
 
 [![Установите WireGuard Server с YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 

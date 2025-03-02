@@ -5,7 +5,9 @@ Hij mag NIET handmatig aangepast worden.
 
 # WireGuard Server voor Yunohost
 
-[![Integratieniveau](https://dash.yunohost.org/integration/wireguard.svg)](https://ci-apps.yunohost.org/ci/apps/wireguard/) ![Mate van functioneren](https://ci-apps.yunohost.org/ci/badges/wireguard.status.svg) ![Onderhoudsstatus](https://ci-apps.yunohost.org/ci/badges/wireguard.maintain.svg)
+[![Integratieniveau](https://apps.yunohost.org/badge/integration/wireguard)](https://ci-apps.yunohost.org/ci/apps/wireguard/)
+![Mate van functioneren](https://apps.yunohost.org/badge/state/wireguard)
+![Onderhoudsstatus](https://apps.yunohost.org/badge/maintained/wireguard)
 
 [![WireGuard Server met Yunohost installeren](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=wireguard)
 
