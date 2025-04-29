@@ -27,7 +27,7 @@ systemctl stop wireguard@wg0.service
 systemctl disable wireguard@wg0.service --quiet
 ynh_safe_rm "/etc/systemd/system/wireguard@.service"
 
-ynh_config_remove_systemdwireguard_ui
+ynh_config_remove_systemd wireguard_ui
 
 #=================================================
 # REMOVE APP MAIN DIR
