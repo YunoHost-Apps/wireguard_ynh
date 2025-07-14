@@ -115,7 +115,8 @@ chmod 750 "$install_dir"
 chmod -R o-rwx "$install_dir"
 chown -R $app: "$install_dir"
 
-chown -R root:$app /etc/wireguard
+chown root:root -R /etc/wireguard
+setfacl -Rdm g:$app:rwX /etc/wireguard
 chmod 770 /etc/wireguard
 chmod -R o-rwx /etc/wireguard
 
