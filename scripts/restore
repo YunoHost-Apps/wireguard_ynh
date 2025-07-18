@@ -30,13 +30,14 @@ ynh_restore_file --origin_path="/etc/wireguard"
 # RESTORE USER RIGHTS
 #=================================================
 
-# Restore permissions on app files
+# Set permissions to app files
+chown -R $app: "$install_dir"
 chmod 750 "$install_dir"
 chmod -R o-rwx "$install_dir"
-chown -R $app: "$install_dir"
 
-chown -R root:$app /etc/wireguard
-chmod 770 /etc/wireguard
+chown root:$app /etc/wireguard
+chown $app:$app /etc/wireguard/*
+chmod 4770 /etc/wireguard
 chmod -R o-rwx /etc/wireguard
 
 #=================================================
