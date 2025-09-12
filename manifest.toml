@@ -15,7 +15,7 @@ website = "https://www.wireguard.com/"
 code = "https://github.com/ngoduykhanh/wireguard-ui"
 
 [integration]
-yunohost = ">= 12.0.9"
+yunohost = ">= 12.1.17"
 helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
