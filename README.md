@@ -8,17 +8,16 @@ It shall NOT be edited by hand.
   WireGuard Server, packaged for YunoHost
 </h1>
 
-[![Integration level](https://apps.yunohost.org/badge/integration/wireguard)](https://ci-apps.yunohost.org/ci/apps/wireguard/)
-![Working status](https://apps.yunohost.org/badge/state/wireguard)
-![Maintenance status](https://apps.yunohost.org/badge/maintained/wireguard)
+Fast and modern VPN server, including a configuration webapp
 
 [![🌐 Official app website](https://img.shields.io/badge/Official_app_website-darkgreen?style=for-the-badge)](https://www.wireguard.com/)
-[![Version: 0.6.2~ynh3](https://img.shields.io/badge/Version-0.6.2~ynh3-rgb(18,138,11)?style=for-the-badge)](https://ci-apps.yunohost.org/ci/apps/wireguard/)
+[![Version: 0.6.2~ynh4](https://img.shields.io/badge/Version-0.6.2~ynh4-rgb(18,138,11)?style=for-the-badge)](https://ci-apps.yunohost.org/ci/apps/wireguard/)
 
 <div align="center">
 <a href="https://apps.yunohost.org/app/wireguard"><img height="100px" src="https://github.com/YunoHost/yunohost-artwork/raw/refs/heads/main/badges/neopossum-badges/badge_more_info_on_the_appstore.svg"/></a>
 <a href="https://github.com/YunoHost-Apps/wireguard_ynh/issues"><img height="100px" src="https://github.com/YunoHost/yunohost-artwork/raw/refs/heads/main/badges/neopossum-badges/badge_report_an_issue.svg"/></a>
 </div>
+
 
 ## Screenshots
 ![Screenshot of WireGuard Server](./doc/screenshots/screenshot.png)
