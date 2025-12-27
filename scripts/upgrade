@@ -7,6 +7,7 @@
 #=================================================
 
 source _common.sh
+
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -103,6 +104,13 @@ ynh_script_progression --message="Enabling port forwarding..." --weight=1
 
 ynh_add_config --template="../conf/sysctl.conf" --destination="/etc/sysctl.d/$app.conf"
 sysctl -p /etc/sysctl.d/$app.conf
+
+#=================================================
+# CONFIGURE FIREWALL
+#=================================================
+ynh_script_progression --message="Configuring the firewall..." --weight=1
+
+_ynh_config_add_nftables
 
 #=================================================
 # GENERIC FINALIZATION
