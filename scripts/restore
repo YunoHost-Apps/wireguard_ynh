@@ -8,6 +8,7 @@
 
 #Keep this path for calling _common.sh inside the execution's context of backup and restore scripts
 source ../settings/scripts/_common.sh
+
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -61,6 +62,13 @@ ynh_script_progression --message="Enabling port forwarding..." --weight=1
 
 ynh_restore_file --origin_path="/etc/sysctl.d/$app.conf"
 sysctl -p /etc/sysctl.d/$app.conf
+
+#=================================================
+# RESTORE FIREWALL CONFIGURATION
+#=================================================
+ynh_script_progression --message="Restoring firewall configuration..." --weight=1
+
+_ynh_config_restore_nftables
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
