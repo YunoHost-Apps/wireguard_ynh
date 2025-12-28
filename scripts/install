@@ -7,6 +7,7 @@
 #=================================================
 
 source _common.sh
+
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -81,19 +82,26 @@ ynh_add_config --template="../conf/sysctl.conf" --destination="/etc/sysctl.d/$ap
 sysctl -p /etc/sysctl.d/$app.conf
 
 #=================================================
+# CONFIGURE FIREWALL
+#=================================================
+ynh_script_progression --message="Configuring the firewall..." --weight=1
+
+_ynh_config_add_nftables
+
+#=================================================
 # GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
 # Set permissions to app files
+chown -R $app: "$install_dir"
 chmod 750 "$install_dir"
 chmod -R o-rwx "$install_dir"
-chown -R $app: "$install_dir"
 
-chmod 750 /etc/wireguard
+chown root:$app /etc/wireguard
+chmod 4770 /etc/wireguard
 chmod -R o-rwx /etc/wireguard
-chown -R $app: /etc/wireguard
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
