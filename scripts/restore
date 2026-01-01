@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ../settings/scripts/_common.sh
+
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -21,13 +22,15 @@ ynh_restore "/etc/wireguard"
 # RESTORE USER RIGHTS
 #=================================================
 
-# Restore permissions on app files
+# Set permissions to app files
+chown -R $app: "$install_dir"
 chmod 750 "$install_dir"
 chmod -R o-rwx "$install_dir"
-chown -R $app: "$install_dir"
-chmod 750 /etc/wireguard
+
+chown root:$app /etc/wireguard
+chown $app:$app /etc/wireguard/*
+chmod 4770 /etc/wireguard
 chmod -R o-rwx /etc/wireguard
-chown -R $app: /etc/wireguard
 
 #=================================================
 # RESTORE SYSTEMD
@@ -51,6 +54,13 @@ ynh_script_progression "Enabling port forwarding..."
 
 ynh_restore "/etc/sysctl.d/$app.conf"
 sysctl -p /etc/sysctl.d/$app.conf
+
+#=================================================
+# RESTORE FIREWALL CONFIGURATION
+#=================================================
+ynh_script_progression --message="Restoring firewall configuration..." --weight=1
+
+_ynh_config_restore_nftables
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST

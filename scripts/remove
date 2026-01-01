@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source _common.sh
+
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -55,6 +56,9 @@ ynh_safe_rm "/etc/sudoers.d/${app}_ynh"
 
 # Remove sysctl file for port forwarding
 ynh_safe_rm "/etc/sysctl.d/$app.conf"
+
+# Remove app-specific firewall config
+_ynh_config_remove_nftables
 
 #=================================================
 # END OF SCRIPT

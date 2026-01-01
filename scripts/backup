@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ../settings/scripts/_common.sh
+
 source /usr/share/yunohost/helpers
 
 ynh_print_info "Declaring files to be backed up..."
@@ -37,6 +38,9 @@ ynh_backup "$(jq -r 'select(.config_file_path | startswith("/etc/wireguard/") | 
 
 # Backup the sysctl config file to enable port forwarding
 ynh_backup "/etc/sysctl.d/$app.conf"
+
+# Backup the nftables config file to configure firewall
+ynh_backup --src_path="/etc/nftables.d/$app.conf"
 
 #=================================================
 # END OF SCRIPT
