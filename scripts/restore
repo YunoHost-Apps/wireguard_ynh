@@ -1,7 +1,6 @@
 #!/bin/bash
 
 source ../settings/scripts/_common.sh
-
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -58,7 +57,7 @@ sysctl -p /etc/sysctl.d/$app.conf
 #=================================================
 # RESTORE FIREWALL CONFIGURATION
 #=================================================
-ynh_script_progression --message="Restoring firewall configuration..." --weight=1
+ynh_script_progression "Restoring firewall configuration..."
 
 _ynh_config_restore_nftables
 
