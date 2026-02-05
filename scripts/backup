@@ -39,7 +39,7 @@ ynh_backup "$(jq -r 'select(.config_file_path | startswith("/etc/wireguard/") | 
 ynh_backup "/etc/sysctl.d/$app.conf"
 
 # Backup the nftables config file to configure firewall
-ynh_backup --src_path="/etc/nftables.d/$app.conf"
+ynh_backup "/etc/nftables.d/$app.conf"
 
 #=================================================
 # END OF SCRIPT
