@@ -15,6 +15,6 @@ _ynh_config_remove_nftables() {
 }
 
 _ynh_config_restore_nftables() {
-    ynh_restore --origin_path="/etc/nftables.d/${app}.conf"
+    ynh_restore "/etc/nftables.d/${app}.conf"
     ynh_systemctl --service=nftables.service --action=reload 
 }
