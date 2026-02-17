@@ -5,7 +5,7 @@ name = "WireGuard Server"
 description.en = "Fast and modern VPN server, including a configuration webapp"
 description.fr = "Serveur VPN rapide et moderne, incluant une webapp pour le configurer"
 
-version = "0.6.2~ynh5"
+version = "0.6.2~ynh6"
 
 maintainers = ["tituspijean"]
 
@@ -15,11 +15,14 @@ website = "https://www.wireguard.com/"
 code = "https://github.com/ngoduykhanh/wireguard-ui"
 
 [integration]
-yunohost = ">= 11.2"
+yunohost = ">= 12.1.39"
+helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
+
 ldap = false
 sso = false
+
 disk = "50M"
 ram.build = "50M"
 ram.runtime = "50M"
