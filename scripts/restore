@@ -73,7 +73,7 @@ yunohost service add wireguard_ui --description="WireGuard UI"
 # RESTORE VARIOUS FILES
 #=================================================
 
-ynh_restore $(jq -r ".config_file_path" $install_dir/db/server/global_settings.json) || true
+# ynh_restore $(jq -r ".config_file_path" $install_dir/db/server/global_settings.json) || true
 
 #=================================================
 # START UI SYSTEMD SERVICE
