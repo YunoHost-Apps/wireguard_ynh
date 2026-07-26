@@ -8,11 +8,11 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 if ynh_hide_warnings yunohost service status wireguard_ui >/dev/null; then
-	yunohost service remove wireguard_ui
+    yunohost service remove wireguard_ui
 fi
 
 if ynh_hide_warnings yunohost service status wg-quick@wg0 >/dev/null; then
-	yunohost service remove wg-quick@wg0
+    yunohost service remove wg-quick@wg0
 fi
 
 # Stop wg-quick service

@@ -13,7 +13,7 @@ ynh_systemctl --service=wireguard_ui --action="stop" --wait_until="Stopped WireG
 #=================================================
 # CHANGE CONFIGURATION FOR THE WEB UI
 #=================================================
-ynh_safe_rm "$install_dir/wireguard-ui.env"
+
 ynh_config_add --template="wireguard-ui.env" --destination="$install_dir/wireguard-ui.env"
 
 #=================================================
