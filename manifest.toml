@@ -31,6 +31,10 @@ ram.runtime = "50M"
     [install.domain]
     type = "domain"
 
+    [install.path]
+    type = "path"
+    default = "/wireguard"
+
 [resources]
         [resources.sources.main]
         in_subdir = false

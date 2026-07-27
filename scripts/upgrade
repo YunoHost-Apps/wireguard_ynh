@@ -10,23 +10,23 @@ ynh_script_progression "Ensuring downward compatibility..."
 
 # Drop sudoers file if present
 if [ -f "/etc/sudoers.d/${app}_ynh" ]; then
-	ynh_safe_rm /etc/sudoers.d/${app}_ynh
+    ynh_safe_rm /etc/sudoers.d/${app}_ynh
 fi
 
 # Remove deprecated services
 if systemctl list-units --full -all | grep -Fq "wireguard_ui_conf.path"; then
-	systemctl disable --now --quiet wireguard_ui_conf.path
-	ynh_safe_rm "/etc/systemd/system/wireguard_ui_conf.path"
+    systemctl disable --now --quiet wireguard_ui_conf.path
+    ynh_safe_rm "/etc/systemd/system/wireguard_ui_conf.path"
 fi
 if systemctl list-units --full -all | grep -Fq "wireguard_ui_conf.service"; then
-	systemctl disable --now --quiet wireguard_ui_conf.service
-	ynh_safe_rm "/etc/systemd/system/wireguard_ui_conf.service"
+    systemctl disable --now --quiet wireguard_ui_conf.service
+    ynh_safe_rm "/etc/systemd/system/wireguard_ui_conf.service"
 fi
 
 # Remove the service integration from an older version
 if ynh_hide_warnings yunohost service status wireguard@wg0 >/dev/null
 then
-	yunohost service remove wireguard@wg0
+    yunohost service remove wireguard@wg0
 fi
 
 #=================================================
@@ -34,7 +34,7 @@ fi
 #=================================================
 ynh_script_progression "Stopping $app's systemd service..."
 
-ynh_systemctl --service=wireguard_ui --action="stop" --wait_until="Stopped WireGuard UI" --log_path="systemd" --timeout=30
+ynh_systemctl --service=wireguard_ui --action="stop" --wait_until="Stopped wireguard_ui" --log_path="systemd" --timeout=30
 ynh_systemctl --service=wg-quick@wg0 --action="stop"
 
 #=================================================
