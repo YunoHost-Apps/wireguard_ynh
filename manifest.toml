@@ -5,7 +5,7 @@ name = "WireGuard Server"
 description.en = "Fast and modern VPN server, including a configuration webapp"
 description.fr = "Serveur VPN rapide et moderne, incluant une webapp pour le configurer"
 
-version = "0.6.2~ynh6"
+version = "0.6.2~ynh7"
 
 maintainers = ["tituspijean"]
 
@@ -30,6 +30,10 @@ ram.runtime = "50M"
 [install]
     [install.domain]
     type = "domain"
+
+    [install.path]
+    type = "path"
+    default = "/wireguard"
 
 [resources]
         [resources.sources.main]

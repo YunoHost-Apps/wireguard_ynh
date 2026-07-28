@@ -8,7 +8,13 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression "Stopping $app's systemd service..."
 
-ynh_systemctl --service=wireguard_ui --action="stop" --wait_until="Stopped WireGuard UI" --log_path="systemd" --timeout=30
+ynh_systemctl --service=wireguard_ui --action="stop" --wait_until="Stopped wireguard_ui" --log_path="systemd" --timeout=30
+
+#=================================================
+# CHANGE CONFIGURATION FOR THE WEB UI
+#=================================================
+
+ynh_config_add --template="wireguard-ui.env" --destination="$install_dir/wireguard-ui.env"
 
 #=================================================
 # MODIFY URL IN NGINX CONF
